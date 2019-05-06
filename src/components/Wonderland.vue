@@ -28,7 +28,8 @@ var Engine = Matter.Engine,
     Bodies = Matter.Bodies;
 
 const config = {
-    velocityMultiplier: 6,
+    velocityMultiplier: 20,
+    gravityMultiplier: 0.2,
     cameraFOV: 60
 }
 
@@ -38,18 +39,16 @@ const modules = {
         planes: {
 
         }
-    }
+    },
+    size: new THREE.Vector2( 0, 0 ),
+    time: new THREE.Vector2( 0, 0 ),
+    gyro: new THREE.Vector2( 0, 0 )
 }
-
-
 
 export default {
     data () {
         return {
-            size: {
-                x: 0,
-                y: 0
-            }
+            
         }
     },
 	mounted () {
@@ -61,6 +60,7 @@ export default {
         
         this.updateSize()
         this.setupMatterEngine()
+        this.$addBackground()
         this.$addTestObject()
 
         this.setupGestures()
@@ -78,18 +78,18 @@ export default {
 	},
     methods: {
         $addTestObject () {
-            var texture = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly.jpg' );
+            var texture = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly.png' );
 
             for ( let a = 0; a < 16; a++ ) {
-                let height = (this.size.y / 5) / ( Math.floor( 1 + Math.random() * 4 ) )
+                let height = (modules.size.y / 5) / ( Math.floor( 1 + Math.random() * 3 ) )
                 let width = height * 5 / 7
 
-                let x = this.size.x * Math.random() / 2 + this.size.x / 4
-                let y = this.size.y * Math.random() / 2 + this.size.y / 4
+                let x = modules.size.x * Math.random() / 2 + modules.size.x / 4
+                let y = modules.size.y * Math.random() / 2 + modules.size.y / 4
 
                 let geometry = new THREE.PlaneGeometry( width, height, 1)
                 // geometry.translate( height / 2, width / 2, 0 )
-                let material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture })
+                let material = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture, transparent: true })
                 let card = new THREE.Mesh ( geometry, material )
 
                 modules.scene.add( card )
@@ -105,6 +105,41 @@ export default {
                 World.add(modules.matter.engine.world, [ matterBody ]); 
             }
 
+        },
+        $addBackground () {
+            let self = this
+
+            let vertShader = require( "raw-loader!shaders/bg.vert" ).default
+            let fragShader = require( "raw-loader!shaders/bg.frag" ).default
+
+            let geometry = new THREE.PlaneGeometry( 1, 1, 1)
+            // geometry.translate( height / 2, width / 2, 0 )
+
+            console.log(modules.time)
+            let material = new THREE.ShaderMaterial( {
+                vertexShader: vertShader,
+                fragmentShader: fragShader,
+                transparent: true,
+                uniforms: {
+                    resolution: {
+                        value: modules.size
+                    },
+                    time: {
+                        get value () {
+                            return modules.time.x
+                        }
+                    },
+                    gyro: {
+                        value: modules.gyro
+                    }
+                }
+            } )
+
+            console.log(material, modules.time)
+
+            let bg = new THREE.Mesh ( geometry, material )
+
+            modules.scene.add(bg)
         },
         setupGestures () {
             // Create an instance of Hammer with the reference.
@@ -128,12 +163,36 @@ export default {
         },
         setupGyro () {
             window.addEventListener('deviceorientation', ( event )=> {
-               console.log(event)
+               if ( !modules.matter.engine ) return
+
+               let alpha = Math.floor(event.alpha)
+               let beta  = Math.floor(event.beta)
+               let gamma = Math.floor(event.gamma)
+
+               let newGravityX = beta * config.gravityMultiplier
+               let newGravityY = gamma * config.gravityMultiplier
+
+               modules.gyro.set( newGravityX, newGravityY  )
+
+               if (newGravityX == 0 && newGravityY == 0) {
+                   return
+               }
+
+               modules.matter.engine.world.gravity.y = (newGravityX)
+               modules.matter.engine.world.gravity.x = (newGravityY)
+
+
+               // console.log(alpha, beta, gamma)
             });
 
-            window.addEventListener('devicemotion', ( event )=> {
-                this.setVelocity( event.acceleration.x, event.acceleration.y )
-            });
+            // window.addEventListener('devicemotion', ( event )=> {
+            //     let ax = Math.floor( event.acceleration.x )
+            //     let ay = Math.floor( event.acceleration.y )
+
+            //     console.log(ax, ay)
+
+
+            // });
 
             // window.addEventListener('compassneedscalibration', function(event) {
             //    console.log(event)
@@ -151,19 +210,28 @@ export default {
                 canvas: canvasElement,
             })
 
-            renderer.setClearColor(0xFFFFFF)
+            let pointLight = new THREE.PointLight( 0xb7ffff, 1, 100000 );
+            pointLight.intensity = 2;
 
-            
+            scene.add(pointLight)
+
+            renderer.setClearColor(0x000000)            
 
             modules.scene = scene
             modules.camera = camera
             modules.renderer = renderer
+            modules.pointLight = pointLight
+
+            setInterval( ()=>{
+                modules.time.x += 0.005
+                modules.time.x = modules.time.x % 10
+            }, 1000 / 30 )
         },
         setupMatterEngine () {
             
             // create an engine
             var engine = Engine.create();
-            let size = this.size
+            let size = modules.size
 
             var leftPlane = Bodies.rectangle(-100, size.y / 2, 200, size.y, { isStatic: true });
             var rightPlane = Bodies.rectangle(size.x + 100, size.y / 2, 200, size.y, { isStatic: true });
@@ -187,7 +255,7 @@ export default {
            
             if (!modules.matter.engine) return
 
-            let size = this.size
+            let size = modules.size
 
             Matter.Composite.remove(modules.matter.engine.world, modules.matter.planes.left)
             Matter.Composite.remove(modules.matter.engine.world, modules.matter.planes.right)
@@ -226,12 +294,14 @@ export default {
                 let height = rect.height * window.devicePixelRatio
 
                 modules.camera.aspect = width/ height
-                modules.camera.position.x = width / 2
-                modules.camera.position.y = -height / 2
-                modules.camera.position.z = ( ( Math.sqrt( 3 ) / 2 ) * Math.max( width, height ) )
+                modules.camera.position.x = modules.pointLight.position.x = width / 2
+                modules.camera.position.y = modules.pointLight.position.y = -height / 2
+                modules.camera.position.z = modules.pointLight.position.z = ( ( Math.sqrt( 3 ) / 2 ) * Math.max( width, height ) )
 
-                this.size.x = width
-                this.size.y = height
+                modules.pointLight.position.z *= 0.666;
+
+                modules.size.x = width
+                modules.size.y = height
 
                 this.updateMatterPlanes()
 

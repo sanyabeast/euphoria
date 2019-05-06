@@ -22,8 +22,9 @@ env == "production" && increaseVersionBuildNumber();
 
 let webpackConfig = {
     devServer: {
-        host: host,
+        host: "192.168.1.195",
         port: 8000,
+        https: true
     },
     devtool: sourceMap ? 'cheap-module-eval-source-map' : undefined,
     mode: env,
