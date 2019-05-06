@@ -131,13 +131,13 @@ export default {
                console.log(event)
             });
 
-            window.addEventListener('devicemotion', function(event) {
-                console.log(event)
-            });
+            // window.addEventListener('devicemotion', function(event) {
+            //     console.log(event)
+            // });
 
-            window.addEventListener('compassneedscalibration', function(event) {
-               console.log(event)
-            });
+            // window.addEventListener('compassneedscalibration', function(event) {
+            //    console.log(event)
+            // });
         },  
         setupRenderer () {
             let canvasElement = this.$refs.canvas
