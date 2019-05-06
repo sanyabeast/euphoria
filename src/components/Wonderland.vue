@@ -127,13 +127,13 @@ export default {
 
         },
         setupGyro () {
-            window.addEventListener('deviceorientation', function(event) {
+            window.addEventListener('deviceorientation', ( event )=> {
                console.log(event)
             });
 
-            // window.addEventListener('devicemotion', function(event) {
-            //     console.log(event)
-            // });
+            window.addEventListener('devicemotion', ( event )=> {
+                this.setVelocity( event.acceleration.x, event.acceleration.y )
+            });
 
             // window.addEventListener('compassneedscalibration', function(event) {
             //    console.log(event)
