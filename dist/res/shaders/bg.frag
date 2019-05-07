@@ -8,7 +8,7 @@ uniform vec2 gyro;
 
 void main( void ) {
 
-	vec2 position = ( (gl_FragCoord.xy + (vec2(gyro.y, gyro.x) * 10.)) -  resolution.xy*.5 ) / resolution.x;
+	vec2 position = ( (gl_FragCoord.xy + (vec2(gyro.y, -gyro.x) * 18.)) -  resolution.xy*.5 ) / resolution.x;
 
 	// 256 angle steps
 	float angle = atan(position.y,position.x)/(2.*3.14159265359);

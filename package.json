@@ -1,6 +1,6 @@
 {
     "name": "euphoria",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "main": "index.js",
     "author": "sanyabeast <a.gvrnsk@gmail.com>",
     "license": "MIT",
@@ -62,6 +62,7 @@
         "vue-template-compiler": "latest",
         "three": "latest",
         "matter-js": "latest",
-        "hammerjs": "latest"
+        "hammerjs": "latest",
+        "gsap": "latest"
     }
 }

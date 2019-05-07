@@ -11,6 +11,31 @@
             ref="test"
             class="test"
         ></div>
+        <div 
+            class="scores"
+        >
+            <p
+                ref="gravityX"
+                class="gravity-x"
+            >0.00</p>
+            <p
+                ref="gravityY"
+                class="gravity-y"
+            >0.00</p>
+            <p
+                ref="velocityX"
+                class="velocity-x"
+            >0.00</p>
+            <p
+                ref="velocityY"
+                class="velocity-y"
+            >0.00</p>
+            
+        </div>
+        <p 
+            class="pause-button"
+            @click="onPauseClick"
+        >||</p>
     </div>
 </template>
 
@@ -19,6 +44,7 @@
 import * as THREE from "three"
 import { forEach } from "lodash"
 import Hamer from "hammerjs"
+import { TweenMax } from "gsap/TweenMax"
 
 const Matter = require("matter-js")
 
@@ -30,7 +56,8 @@ var Engine = Matter.Engine,
 const config = {
     velocityMultiplier: 20,
     gravityMultiplier: 0.2,
-    cameraFOV: 60
+    cameraFOV: 60,
+    maxVelocity: 120
 }
 
 const modules = {
@@ -75,17 +102,19 @@ export default {
         this.updateSize()
         this.render()
 
+        this.$root.$on( "wonderland.render", ()=> this.render() )
+
 	},
     methods: {
         $addTestObject () {
             var texture = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly.png' );
 
             for ( let a = 0; a < 16; a++ ) {
-                let height = (modules.size.y / 5) / ( Math.floor( 1 + Math.random() * 3 ) )
+                let height = (modules.size.y / 5.5) / ( Math.floor( 1 + Math.random() * 4 ) )
                 let width = height * 5 / 7
 
-                let x = modules.size.x * Math.random() / 2 + modules.size.x / 4
-                let y = modules.size.y * Math.random() / 2 + modules.size.y / 4
+                let x = modules.size.x / 2
+                let y = modules.size.y / 2
 
                 let geometry = new THREE.PlaneGeometry( width, height, 1)
                 // geometry.translate( height / 2, width / 2, 0 )
@@ -143,7 +172,7 @@ export default {
         },
         setupGestures () {
             // Create an instance of Hammer with the reference.
-            var manager = new Hammer.Manager( this.$refs.root );
+            var manager = new Hammer.Manager( document.body );
 
             // Create a recognizer
             var Swipe = new Hammer.Swipe();
@@ -181,6 +210,9 @@ export default {
                modules.matter.engine.world.gravity.y = (newGravityX)
                modules.matter.engine.world.gravity.x = (newGravityY)
 
+               this.$refs.gravityX.textContent = newGravityX.toFixed(2)
+               this.$refs.gravityY.textContent = newGravityY.toFixed(2)
+
 
                // console.log(alpha, beta, gamma)
             });
@@ -211,7 +243,13 @@ export default {
             })
 
             let pointLight = new THREE.PointLight( 0xb7ffff, 1, 100000 );
-            pointLight.intensity = 2;
+            pointLight.intensity = 3;
+
+            TweenMax.to( pointLight, 2, {
+                intensity: 2,
+                repeat: -1,
+                yoyo: true
+            } )
 
             scene.add(pointLight)
 
@@ -283,6 +321,9 @@ export default {
 
             modules.renderer.render( modules.scene, modules.camera )
         },
+        stopRendering () {
+            cancelAnimationFrame( this.rafId )
+        },
         updateSize () {
             let canvasElement = this.$refs.canvas
             let canvasParentElement = canvasElement.parentElement
@@ -310,6 +351,16 @@ export default {
             }
         },
         setVelocity ( x, y ) {
+
+            if (x > config.maxVelocity) x = config.maxVelocity
+            if (x < -config.maxVelocity) x = -config.maxVelocity
+
+            if (y > config.maxVelocity) y = config.maxVelocity
+            if (y < -config.maxVelocity) y = -config.maxVelocity
+
+            this.$refs.velocityX.textContent = x.toFixed(2)
+            this.$refs.velocityY.textContent = y.toFixed(2)
+
             forEach( modules.cards, ( card )=>{
                 Matter.Body.setVelocity( card.matterBody, { x: x, y: y });
             } )
@@ -334,6 +385,10 @@ export default {
 
                 modules.cards[a].rotation.z = -modules.cards[a].matterBody.angle
             }
+        },
+        onPauseClick () {
+            this.stopRendering()
+            this.$store.state.paused = true
         }
     }
 

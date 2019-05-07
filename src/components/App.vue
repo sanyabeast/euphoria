@@ -7,16 +7,25 @@
         <Wonderland
 
         ></Wonderland>
+
+        <Pause
+            v-if="$store.state.paused === true"
+        />
+
     </div>
 </template>
 
 <script>
 
 import Button from "components/Button.vue"
+import Pause from "components/Pause.vue"
 import Wonderland from "components/Wonderland.vue"
 
 export default {
-	components: { Button, Wonderland },
+	components: { Button, Wonderland, Pause },
+    data () {
+
+    },
 	mount () {
 		// this.$store.commit( "currentPage", "projects" )
 	},
