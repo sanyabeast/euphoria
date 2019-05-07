@@ -13,6 +13,12 @@
             class="test"
         ></div>
         <div 
+            class="total-score"
+            ref="totalScore"
+        >
+            {{totalScore.toFixed(2)}}
+        </div>
+        <div 
             class="scores"
         >
             <p
@@ -58,7 +64,42 @@ const config = {
     velocityMultiplier: 20,
     gravityMultiplier: 0.2,
     cameraFOV: 60,
-    maxVelocity: 120
+    maxVelocity: 120,
+    boxWallThickness: 1,
+    cardTextures: {
+        doll: {
+            texture: 'res/pics/doll.png',
+            bumpmap: 'res/pics/bump_doll.png',
+            aspect: 5 / 7,
+            bumpScale: 5,
+            count: 3,
+            sizeDivider: 2.5
+        },
+        ninja: {
+            texture: 'res/pics/ninja.png',
+            bumpmap: 'res/pics/bump_ninja.png',
+            aspect: 5 / 7,
+            bumpScale: 5,
+            count: 3,
+            sizeDivider: 2.5
+        },
+        baba_warrior: {
+            texture: 'res/pics/baba_warrior.png',
+            bumpmap: 'res/pics/bump_baba_warrior.png',
+            aspect: 5 / 7,
+            bumpScale: 5,
+            count: 3,
+            sizeDivider: 2.5
+        },
+        amazonka: {
+            texture: 'res/pics/amazonka.png',
+            bumpmap: 'res/pics/bump_amazonka.png',
+            bumpScale: 5,
+            aspect: 5 / 7,
+            count: 3,
+            sizeDivider: 2.5
+        }
+    },
 }
 
 const modules = {
@@ -76,7 +117,26 @@ const modules = {
 export default {
     data () {
         return {
-            
+            totalScore: 0
+        }
+    },
+    watch: {
+        totalScore: function(){
+            if ( this.scoreTween ) {
+                this.scoreTween.kill()
+                delete this.scoreTween
+            }
+
+            this.scoreTween = TweenMax.fromTo( this.$refs.totalScore, 0.1, {
+                 transform: "scale(1, 1)"
+            }, {
+                transform: "scale(2, 2)",
+                yoyo: true,
+                repeat: 1,
+                onComplete: ()=>{
+                    delete this.scoreTween
+                }
+            } )
         }
     },
 	mounted () {
@@ -108,43 +168,49 @@ export default {
 	},
     methods: {
         $addTestObject () {
-            var texture = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly.png' );
-            var bumpMap = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly_bumpmap.png' );
+            forEach( config.cardTextures, ( data, name )=>{
+                let texture = new THREE.TextureLoader().load( data.texture );
+                let bumpMap = new THREE.TextureLoader().load( data.bumpmap );
 
-            for ( let a = 0; a < 16; a++ ) {
-                let height = (modules.size.y / 5.5) / ( Math.floor( 1 + Math.random() * 4 ) )
-                let width = height * 5 / 7
+                for ( let a = 0; a < data.count; a++ ) {
+                    let height = (modules.size.y / (data.sizeDivider || 3)) / ( Math.floor( 2 + Math.random() * 3 ) )
+                    let width = height * data.aspect
 
-                let x = modules.size.x / 2
-                let y = modules.size.y / 2
+                    let x = modules.size.x / 2
+                    let y = modules.size.y / 2
 
-                let geometry = new THREE.PlaneGeometry( width, height, 1)
-                // geometry.translate( height / 2, width / 2, 0 )
-                let material = new THREE.MeshPhongMaterial( { 
-                    color: 0xffffff, 
-                    map: texture, 
-                    transparent: true,
-                    
-                })
+                    let geometry = new THREE.PlaneGeometry( width, height, 1)
+                    // geometry.translate( height / 2, width / 2, 0 )
+                    let material = new THREE.MeshPhongMaterial( { 
+                        color: 0xffffff, 
+                        map: texture, 
+                        transparent: true,
+                        
+                    })
 
-                material.bumpMap = bumpMap
-                material.bumpScale = 4
+                    material.bumpMap = bumpMap
+                    material.bumpScale = data.bumpScale || 1
 
-                let card = new THREE.Mesh ( geometry, material )
+                    let card = new THREE.Mesh ( geometry, material )
 
-                modules.scene.add( card )
+                    modules.scene.add( card )
 
-                modules.cards[a] = card
+                    modules.cards.push( card )
 
-                let matterBody = Bodies.rectangle(x, y, width, height );
-                Matter.Body.setAngle( matterBody, Math.random() * Math.PI * 2 )
+                    let matterBody = Bodies.rectangle(x, y, width, height );
+                    Matter.Body.setAngle( matterBody, Math.random() * Math.PI * 2 )
 
-                Matter.Body.setMass( matterBody, Math.pow( width, 2 ) )
-                card.matterBody = matterBody
+                    Matter.Body.setMass( matterBody, Math.pow( width, 2 ) )
 
-                World.add(modules.matter.engine.world, [ matterBody ]); 
-            }
+                    matterBody.friction = 0.01;
+                    matterBody.frictionAir = 0.02;
+                    matterBody.restitution = 0.01;
 
+                    card.matterBody = matterBody
+
+                    World.add(modules.matter.engine.world, [ matterBody ]); 
+                }
+            } )
         },
         $addBackground () {
             let self = this
@@ -249,27 +315,27 @@ export default {
             let scene = new THREE.Scene()
             let camera = new THREE.PerspectiveCamera( config.cameraFOV, window.innerWidth / window.innerHeight, 0.1, 10000 )
             let renderer = new THREE.WebGLRenderer({ 
-                antialias: true, 
+                antialias: false, 
                 canvas: canvasElement,
             })
 
-            let pointLight = new THREE.PointLight( 0xb7ffff, 1, 100000 );
-            pointLight.intensity = 3.5;
+            let pointLight = new THREE.PointLight( 0xFFFFFF, 1, 100000 );
+            pointLight.intensity = 0.8;
 
-            TweenMax.to( pointLight, 2, {
-                intensity: 2,
+            TweenMax.to( pointLight, 5, {
+                intensity: 1.4,
                 repeat: -1,
                 yoyo: true
             } )
 
-            TweenMax.to( pointLight.color, 10, {
-                color: 0xFF0000,
-                r: 255/255,
-                g: 228/255,
-                b: 163/255,
-                repeat: -1,
-                yoyo: true
-            } )
+            // TweenMax.to( pointLight.color, 10, {
+            //     color: 0xFF0000,
+            //     r: 255/255,
+            //     g: 228/255,
+            //     b: 163/255,
+            //     repeat: -1,
+            //     yoyo: true
+            // } )
 
             scene.add(pointLight)
 
@@ -291,10 +357,10 @@ export default {
             var engine = Engine.create();
             let size = modules.size
 
-            var leftPlane = Bodies.rectangle(-100, size.y / 2, 200, size.y, { isStatic: true });
-            var rightPlane = Bodies.rectangle(size.x + 100, size.y / 2, 200, size.y, { isStatic: true });
-            var topPlane = Bodies.rectangle(size.x / 2, -100, size.x, 200, { isStatic: true });
-            var bottomPlane = Bodies.rectangle(size.x / 2, size.y + 100, size.x, 200, { isStatic: true });
+            var leftPlane = Bodies.rectangle(-(config.boxWallThickness / 2), size.y / 2, config.boxWallThickness, size.y, { isStatic: true });
+            var rightPlane = Bodies.rectangle(size.x + (config.boxWallThickness / 2), size.y / 2, config.boxWallThickness, size.y, { isStatic: true });
+            var topPlane = Bodies.rectangle(size.x / 2, -(config.boxWallThickness / 2), size.x, config.boxWallThickness, { isStatic: true });
+            var bottomPlane = Bodies.rectangle(size.x / 2, size.y + (config.boxWallThickness / 2), size.x, config.boxWallThickness, { isStatic: true });
 
             // add all of the bodies to the world
             World.add(engine.world, [ leftPlane, rightPlane, topPlane, bottomPlane ]);
@@ -404,6 +470,20 @@ export default {
                 //     x : body.position.x + delta.x,
                 //     y : body.position.y + delta.y,
                 // });
+
+                if (modules.cards[a].matterBody.position.x > modules.size.x * 2) {
+                    // console.log(1)
+                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
+                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
+
+                    Matter.Body.setPosition( modules.cards[a].matterBody, { x: 0, y: 0 } )
+                }
+
+                if (modules.cards[a].matterBody.position.x < -modules.size.x ) {
+                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
+                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
+                    Matter.Body.setPosition( modules.cards[a].matterBody, { x: modules.size.x, y: 0 } )
+                }
 
                 modules.cards[a].position.x = modules.cards[a].matterBody.position.x
                 modules.cards[a].position.y = -modules.cards[a].matterBody.position.y
