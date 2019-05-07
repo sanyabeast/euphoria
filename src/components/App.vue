@@ -24,7 +24,7 @@ import Wonderland from "components/Wonderland.vue"
 export default {
 	components: { Button, Wonderland, Pause },
     data () {
-
+        return {}
     },
 	mount () {
 		// this.$store.commit( "currentPage", "projects" )

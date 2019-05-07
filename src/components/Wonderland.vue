@@ -109,6 +109,7 @@ export default {
     methods: {
         $addTestObject () {
             var texture = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly.png' );
+            var bumpMap = new THREE.TextureLoader().load( 'res/pics/Sloppy_Dolly_bumpmap.png' );
 
             for ( let a = 0; a < 16; a++ ) {
                 let height = (modules.size.y / 5.5) / ( Math.floor( 1 + Math.random() * 4 ) )
@@ -119,7 +120,16 @@ export default {
 
                 let geometry = new THREE.PlaneGeometry( width, height, 1)
                 // geometry.translate( height / 2, width / 2, 0 )
-                let material = new THREE.MeshPhongMaterial( { color: 0xffffff, map: texture, transparent: true })
+                let material = new THREE.MeshPhongMaterial( { 
+                    color: 0xffffff, 
+                    map: texture, 
+                    transparent: true,
+                    
+                })
+
+                material.bumpMap = bumpMap
+                material.bumpScale = 4
+
                 let card = new THREE.Mesh ( geometry, material )
 
                 modules.scene.add( card )
