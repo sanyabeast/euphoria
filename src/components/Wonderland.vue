@@ -2,6 +2,7 @@
     <div 
         ref="root"
         class="wonderland root"
+        @click="onRootClick"
     >
 
         <canvas
@@ -389,6 +390,12 @@ export default {
         onPauseClick () {
             this.stopRendering()
             this.$store.state.paused = true
+        },
+        onRootClick () {
+            try {
+                document.body.webkitRequestFullscreen()
+
+            } catch ( err ) {}
         }
     }
 
