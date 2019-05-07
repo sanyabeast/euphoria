@@ -262,6 +262,15 @@ export default {
                 yoyo: true
             } )
 
+            TweenMax.to( pointLight.color, 10, {
+                color: 0xFF0000,
+                r: 255/255,
+                g: 228/255,
+                b: 163/255,
+                repeat: -1,
+                yoyo: true
+            } )
+
             scene.add(pointLight)
 
             renderer.setClearColor(0x000000)            
