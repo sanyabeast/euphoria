@@ -392,10 +392,10 @@ export default {
             this.$store.state.paused = true
         },
         onRootClick () {
-            try {
-                document.body.webkitRequestFullscreen()
+            // try {
+            //     document.body.webkitRequestFullscreen()
 
-            } catch ( err ) {}
+            // } catch ( err ) {}
         }
     }
 
