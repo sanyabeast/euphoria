@@ -92,15 +92,13 @@ h1, h2 {
 	}
 
 	.pause-menu {
-		background: rgba(0, 0, 0, 0.41);
+	    background: rgba(246, 43, 9, 0.71);
 	    width: 66vw;
 	    height: 60vw;
 	    position: absolute;
 	    left: 50%;
 	    top: 50%;
 	    transform: translate(-50%, -50%);
-	    border-radius: 16px;
-	    box-shadow: 0px 0px 80px 19px rgba(255, 0, 94, 0.48);
 	    display: flex;
 	    justify-content: center;
 	    align-items: center;
@@ -149,20 +147,18 @@ h1, h2 {
 }
 
 .pause-menu-fade-enter-active {
-  animation: pause-menu-fade-in .5s;
+  animation: pause-menu-fade-in .75s;
 }
 .pause-menu-fade-leave-active {
-  animation: pause-menu-fade-in .5s reverse;
+  animation: pause-menu-fade-in .0s reverse;
 }
 
 @keyframes pause-menu-fade-in {
   0% {
-    transform: translate3d(-50%, -50%, 0) scale(0.8);
+    clip-path: circle(1px at 50% 50%);
   }
-  50% {
-    transform: translate3d(-50%, -50%, 0) scale(1);
-  }
+
   100% {
-    transform: translate3d(-50%, -50%, 0) scale(1);
+    clip-path: circle(100% at 50% 50%);
   }
 }

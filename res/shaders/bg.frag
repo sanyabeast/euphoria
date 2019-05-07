@@ -21,7 +21,7 @@ void main( void ) {
 		float angleRnd = floor(angle*256.)+1.;
 		float angleRnd1 = fract(angleRnd*fract(angleRnd*.7235)*45.1);
 		float angleRnd2 = fract(angleRnd*fract(angleRnd*.82657)*13.724);
-		float t = (time*10.)+angleRnd1*10.;
+		float t = (time*5.)+angleRnd1*10.;
 		float radDist = sqrt(angleRnd2+float(i));
 		
 		float adist = radDist/rad*.1;

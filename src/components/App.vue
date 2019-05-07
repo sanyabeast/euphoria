@@ -8,10 +8,12 @@
 
         ></Wonderland>
 
-        <Pause
-            v-if="$store.state.paused === true"
-        />
+        <transition name="pause-menu-fade">
+            <Pause
+                v-if="$store.state.paused === true"
+            />
 
+        </transition>
     </div>
 </template>
 

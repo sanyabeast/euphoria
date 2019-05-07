@@ -101,9 +101,9 @@ export default {
         window.addEventListener( "orientationchange", ()=> this.updateSize() )
 
         this.updateSize()
-        this.render()
+        this.startRendering()
 
-        this.$root.$on( "wonderland.render", ()=> this.render() )
+        this.$root.$on( "wonderland.render", ()=> this.startRendering() )
 
 	},
     methods: {
@@ -254,7 +254,7 @@ export default {
             })
 
             let pointLight = new THREE.PointLight( 0xb7ffff, 1, 100000 );
-            pointLight.intensity = 3;
+            pointLight.intensity = 3.5;
 
             TweenMax.to( pointLight, 2, {
                 intensity: 2,
@@ -297,7 +297,7 @@ export default {
             // run the engine
             modules.matter.engine = engine
             // modules.matter.render = render
-            Engine.run(modules.matter.engine);
+        
             // run the renderer
         },
         updateMatterPlanes () {
@@ -325,6 +325,10 @@ export default {
             modules.matter.planes.top = topPlane
             modules.matter.planes.bottom = bottomPlane
         },
+        startRendering () {
+            modules.matter.runner = Engine.run(modules.matter.engine);
+            this.render()
+        },
         render () {
             this.rafId = requestAnimationFrame( ()=> this.render() )
 
@@ -333,6 +337,7 @@ export default {
             modules.renderer.render( modules.scene, modules.camera )
         },
         stopRendering () {
+            Matter.Runner.stop( modules.matter.runner )
             cancelAnimationFrame( this.rafId )
         },
         updateSize () {
@@ -348,7 +353,7 @@ export default {
                 modules.camera.aspect = width/ height
                 modules.camera.position.x = modules.pointLight.position.x = width / 2
                 modules.camera.position.y = modules.pointLight.position.y = -height / 2
-                modules.camera.position.z = modules.pointLight.position.z = ( ( Math.sqrt( 3 ) / 2 ) * Math.max( width, height ) )
+                modules.camera.position.z = modules.pointLight.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
                 modules.pointLight.position.z *= 0.666;
 
