@@ -28,8 +28,18 @@ export default {
     data () {
         return {}
     },
-	mount () {
-		// this.$store.commit( "currentPage", "projects" )
+	mounted () {
+		window.addEventListener( "android.key.back.pressed", ()=>{
+            this.$store.dispatch( "native", {
+                method: "showExitDialog",
+                args: [
+                    "Really?",
+                    "Yes",
+                    "No"
+                ]
+            } )
+        } )
+
 	},
     methods: {
 

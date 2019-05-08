@@ -12,7 +12,14 @@ var actions = {
 		let currentPageRoutes = store.state.routes[ currentPage ]
 
 		store.state.currentPage = currentPageRoutes[0]
-	}
+	},
+	native ( store, params ) {
+		if ( "native" in window ) {
+			try {
+				window.native[ params.method ]( ...params.args )
+			} catch ( err ) {} 
+		}
+	} 
 };
 
 export default actions;
