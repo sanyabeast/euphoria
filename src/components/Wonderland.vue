@@ -69,36 +69,36 @@ const config = {
     maxVelocity: 120,
     boxWallThickness: 1,
     cardTextures: {
-        doll: {
-            texture: 'res/pics/doll.png',
-            bumpmap: 'res/pics/bump_doll.png',
+        hearts_king: {
+            texture: 'res/pics/hearts_king.png',
+            bumpmap: 'res/pics/bump_hearts_king.png',
             aspect: 5 / 7,
-            bumpScale: 5,
-            count: 3,
+            bumpScale: 10,
+            count: 2,
             sizeDivider: 2.5
         },
-        ninja: {
-            texture: 'res/pics/ninja.png',
-            bumpmap: 'res/pics/bump_ninja.png',
+        hearts_queen: {
+            texture: 'res/pics/hearts_queen.png',
+            bumpmap: 'res/pics/bump_hearts_queen.png',
             aspect: 5 / 7,
-            bumpScale: 5,
-            count: 3,
+            bumpScale: 10,
+            count: 2,
             sizeDivider: 2.5
         },
-        baba_warrior: {
-            texture: 'res/pics/baba_warrior.png',
-            bumpmap: 'res/pics/bump_baba_warrior.png',
+        queen: {
+            texture: 'res/pics/queen.png',
+            bumpmap: 'res/pics/bump_queen.png',
             aspect: 5 / 7,
-            bumpScale: 5,
-            count: 3,
+            bumpScale: 10,
+            count: 2,
             sizeDivider: 2.5
         },
-        amazonka: {
-            texture: 'res/pics/amazonka.png',
-            bumpmap: 'res/pics/bump_amazonka.png',
-            bumpScale: 5,
+        eight: {
+            texture: 'res/pics/eight.png',
+            bumpmap: 'res/pics/bump_eight.png',
+            bumpScale: 10,
             aspect: 5 / 7,
-            count: 3,
+            count: 2,
             sizeDivider: 2.5
         }
     },
@@ -176,7 +176,7 @@ export default {
                 let bumpMap = new THREE.TextureLoader().load( data.bumpmap );
 
                 for ( let a = 0; a < data.count; a++ ) {
-                    let height = (modules.size.y / (data.sizeDivider || 3)) / ( Math.floor( 2 + Math.random() * 3 ) )
+                    let height = (modules.size.y / ( 4 + ( Math.floor( Math.random() * 4 ) ) ) )
                     let width = height * data.aspect
 
                     let x = modules.size.x / 2
@@ -323,11 +323,11 @@ export default {
                 canvas: canvasElement,
             })
 
-            let pointLight = new THREE.PointLight( 0xFFFFFF, 1, 100000 );
-            pointLight.intensity = 0.8;
+            let pointLight = new THREE.PointLight( 0xffedb8, 1, 100000 );
+            pointLight.intensity = 0.75;
 
             TweenMax.to( pointLight, 5, {
-                intensity: 1.4,
+                intensity: 2,
                 repeat: -1,
                 yoyo: true
             } )
@@ -440,7 +440,7 @@ export default {
                 modules.camera.position.y = modules.pointLight.position.y = -height / 2
                 modules.camera.position.z = modules.pointLight.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.pointLight.position.z *= 0.666;
+                modules.pointLight.position.z *= 0.555;
 
                 modules.size.x = width
                 modules.size.y = height
