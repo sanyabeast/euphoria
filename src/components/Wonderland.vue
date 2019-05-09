@@ -219,7 +219,8 @@ export default {
             let self = this
 
             let vertShader = require( "raw-loader!shaders/bg.vert" ).default
-            let fragShader = require( "raw-loader!shaders/bg.frag" ).default
+            // let fragShader = require( "raw-loader!shaders/bg.frag" ).default
+            let fragShader = require( "raw-loader!shaders/helix.frag" ).default
 
             let geometry = new THREE.PlaneGeometry( 1, 1, 1)
             // geometry.translate( height / 2, width / 2, 0 )
@@ -323,11 +324,11 @@ export default {
                 canvas: canvasElement,
             })
 
-            let pointLight = new THREE.PointLight( 0xffedb8, 1, 100000 );
-            pointLight.intensity = 0.75;
+            let pointLight = new THREE.PointLight( 0xf6daf6, 1, 100000 );
+            pointLight.intensity = 1;
 
             TweenMax.to( pointLight, 5, {
-                intensity: 2,
+                intensity: 1.4,
                 repeat: -1,
                 yoyo: true
             } )
@@ -351,8 +352,8 @@ export default {
             modules.pointLight = pointLight
 
             setInterval( ()=>{
-                modules.time.x += 0.005
-                modules.time.x = modules.time.x % 10
+                modules.time.x += 0.001
+                modules.time.x = modules.time.x % 1000
             }, 1000 / 30 )
         },
         setupMatterEngine () {
@@ -412,6 +413,8 @@ export default {
         render () {
             let now = +new Date()
             let delta = now - this.prevRenderedFrameTime
+
+            if ( delta > 100 ) delta = 100
 
             this.prevRenderedFrameTime = now
 
