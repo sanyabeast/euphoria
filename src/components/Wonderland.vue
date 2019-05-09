@@ -55,6 +55,8 @@ import { TweenMax } from "gsap/TweenMax"
 
 const Matter = require("matter-js")
 
+window.Matter = Matter
+
 var Engine = Matter.Engine,
     Render = Matter.Render,
     World = Matter.World,
@@ -117,7 +119,8 @@ const modules = {
 export default {
     data () {
         return {
-            totalScore: 0
+            totalScore: 0,
+            prevRenderedFrameTime: +new Date()
         }
     },
     watch: {
@@ -249,7 +252,7 @@ export default {
         },
         setupGestures () {
             // Create an instance of Hammer with the reference.
-            var manager = new Hammer.Manager( document.body );
+            var manager = new Hammer.Manager( this.$refs.root );
 
             // Create a recognizer
             var Swipe = new Hammer.Swipe();
@@ -299,7 +302,7 @@ export default {
             //     let ax = Math.floor( event.acceleration.x )
             //     let ay = Math.floor( event.acceleration.y )
 
-            //     console.log(ax, ay)
+            //     this.setVelocity(ax, ay)
 
 
             // });
@@ -402,18 +405,24 @@ export default {
             modules.matter.planes.bottom = bottomPlane
         },
         startRendering () {
-            modules.matter.runner = Engine.run(modules.matter.engine);
+            this.prevRenderedFrameTime = +new Date()
+            // modules.matter.runner = Engine.run(modules.matter.engine);
             this.render()
         },
         render () {
+            let now = +new Date()
+            let delta = now - this.prevRenderedFrameTime
+
+            this.prevRenderedFrameTime = now
+
             this.rafId = requestAnimationFrame( ()=> this.render() )
 
-            this.updateThings()
+            this.updateThings( delta )
 
             modules.renderer.render( modules.scene, modules.camera )
         },
         stopRendering () {
-            Matter.Runner.stop( modules.matter.runner )
+            // Matter.Runner.stop( modules.matter.runner )
             cancelAnimationFrame( this.rafId )
         },
         updateSize () {
@@ -457,8 +466,8 @@ export default {
                 Matter.Body.setVelocity( card.matterBody, { x: x, y: y });
             } )
         },
-        updateThings () {
-
+        updateThings ( delta ) {
+            Matter.Engine.update( modules.matter.engine, delta )
             // Render.run(modules.matter.render);
             
             // modules.cards.kek.rotation.z+=0.001

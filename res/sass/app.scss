@@ -3,6 +3,8 @@ html, body {
 	height: 100%;
 	margin: 0;
 	overflow: hidden;
+	// -ms-touch-action: manipulation;
+	// touch-action: manipulation;
 }
 
 * {
@@ -94,7 +96,8 @@ h1, h2 {
 			color: #ffffff;
 		    font-size: 24px;
 		    font-weight: 800;
-		    width: 79px;
+		    width: 132px;
+		    height: 64px;
 		    text-align: center;
 		    position: absolute;
 		    top: 0;
@@ -168,10 +171,19 @@ h1, h2 {
 }
 
 .pause-menu-fade-enter-active {
-  animation: pause-menu-fade-in .75s;
+  animation: pause-menu-fade-in .35s;
 }
 .pause-menu-fade-leave-active {
   animation: pause-menu-fade-in .0s reverse;
+}
+
+[data-browser-name="safari"] {
+	.pause-menu-fade-enter-active {
+	  animation: pause-menu-fade-safari-in .35s;
+	}
+	.pause-menu-fade-leave-active {
+	  animation: pause-menu-fade-safari-in .0s reverse;
+	}
 }
 
 @keyframes pause-menu-fade-in {
@@ -181,5 +193,15 @@ h1, h2 {
 
   100% {
     clip-path: circle(100% at 50% 50%);
+  }
+}
+
+@keyframes pause-menu-fade-safari-in {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1)
   }
 }

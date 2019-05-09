@@ -1,6 +1,8 @@
 <template>
     <div 
         class="euphoria root"
+        :data-browser-name="$store.state.browserName"
+        :data-mobile-device="$store.state.mobileDevice ? 1 : 0"
     >
 
         hi
@@ -29,6 +31,17 @@ export default {
         return {}
     },
 	mounted () {
+
+        document.body.addEventListener( "touchstart", ( evt )=>{
+            evt.stopPropagation()
+            evt.preventDefault()
+        } )
+
+        document.body.addEventListener( "touchmove", ( evt )=>{
+            evt.stopPropagation()
+            evt.preventDefault()
+        } )
+
 		window.addEventListener( "android.key.back.pressed", ()=>{
             this.$store.dispatch( "native", {
                 method: "showExitDialog",

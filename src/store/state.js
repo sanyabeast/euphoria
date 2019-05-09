@@ -1,14 +1,16 @@
 import translations from "store/state/translations"
 import Device from "device.js/dist/device"
-import bowser from "bowser/src/bowser"
+import Bowser from "bowser"
 
+const browser = Bowser.getParser(window.navigator.userAgent);
 const device = new Device()
 
-console.log(device, bowser)
 
 var state = {
 	$root: null,
 	paused: false,
+	browserName: browser.getBrowserName().toLowerCase(),
+	mobileDevice: !device.desktop,
 	/*l18n*/
 	language : "ukr",
 	routes: {
