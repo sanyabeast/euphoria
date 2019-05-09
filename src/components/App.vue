@@ -32,10 +32,10 @@ export default {
     },
 	mounted () {
 
-        document.body.addEventListener( "touchstart", ( evt )=>{
-            evt.stopPropagation()
-            evt.preventDefault()
-        } )
+        // document.body.addEventListener( "touchstart", ( evt )=>{
+        //     evt.stopPropagation()
+        //     evt.preventDefault()
+        // } )
 
         document.body.addEventListener( "touchmove", ( evt )=>{
             evt.stopPropagation()
