@@ -22,7 +22,7 @@ env == "production" && increaseVersionBuildNumber();
 
 let webpackConfig = {
     devServer: {
-        host: "192.168.1.195",
+        host: host,
         port: 8000,
         https: true
     },
@@ -77,11 +77,6 @@ let webpackConfig = {
             template: path.join(__dirname, 'static', 'index.html'),
             inject: true,
         }),
-        new BundleAnalyzerPlugin({
-            reportFilename: "../misc/bundle-stats.html",
-            analyzerMode: "static",
-            openAnalyzer: false
-        })
     ],
 };
 
@@ -114,6 +109,12 @@ if (env == "production") {
     webpackConfig.plugins.push( new CopyPlugin([
       { from: 'res', to: 'res' },
     ]) )
+
+    webpackConfig.plugins.push( new BundleAnalyzerPlugin({
+        reportFilename: "../misc/bundle-stats.html",
+        analyzerMode: "static",
+        openAnalyzer: false
+    }) )
 } else {
     webpackConfig.entry = {
         "main": "main",

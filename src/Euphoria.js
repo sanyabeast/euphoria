@@ -1,8 +1,8 @@
 import _ from "./Helpers"
 
 import Vue from "vue"
-import StoreCreator from "Store/StoreCreator"
-import App from "Components/App.vue"
+import StoreCreator from "store/StoreCreator"
+import App from "components/App.vue"
 import packageObj from "../package.json"
 
 window.clog = console.log.bind(console)

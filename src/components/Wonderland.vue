@@ -140,7 +140,7 @@ export default {
         }
     },
 	mounted () {
-        console.log(Hammer)
+        // console.log(Hammer)
 
         window.wonder = this
 
@@ -263,6 +263,7 @@ export default {
 
             // Subscribe to a desired event
             manager.on('swipe', (e)=>{
+                e.preventDefault()
                 this.setVelocity( e.overallVelocityX * config.velocityMultiplier * window.devicePixelRatio, e.overallVelocityY * config.velocityMultiplier * window.devicePixelRatio )
             });
 

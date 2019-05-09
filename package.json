@@ -63,6 +63,8 @@
         "three": "latest",
         "matter-js": "latest",
         "hammerjs": "latest",
-        "gsap": "latest"
+        "gsap": "latest",
+        "bowser": "latest",
+        "device.js": "latest"
     }
 }

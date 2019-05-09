@@ -2,11 +2,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import _ from "Helpers";
 
-import state from "Store/state";
-import getters from "Store/getters";
-import mutations from "Store/mutations";
-import modules from "Store/modules";
-import actions from "Store/actions";
+import state from "store/state";
+import getters from "store/getters";
+import mutations from "store/mutations";
+import modules from "store/modules";
+import actions from "store/actions";
 
 Vue.use(Vuex);
 
