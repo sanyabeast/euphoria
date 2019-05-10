@@ -113,6 +113,7 @@ h1, h2 {
 		    display: flex;
 		    align-items: center;
 		    justify-content: center;
+		    z-index: 1;
 
 		    i {
 		    	font-size: 44px;
@@ -124,6 +125,37 @@ h1, h2 {
 
 	.pause-menu {
 	    width: 80%;
+	    z-index: 3;
+	}
+
+	.overlay {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: #0668ff2e;
+		z-index: 2
+	}
+
+	.settings-menu {
+		display: flex;
+    	flex-direction: column;
+		width: 80%;
+		max-width: 600px;
+		height: 80%;
+		min-height: 50%;
+		z-index: 3;
+
+		.window-content {
+			flex-grow: 1;
+			flex-shrink: 1!important;
+			overflow: hidden;
+
+			.tab-items {
+				overflow-y: auto;
+			}
+		}
 	}
 
 }
@@ -222,3 +254,4 @@ h1, h2 {
   /* Support for IE. */
   font-feature-settings: 'liga';
 }
+

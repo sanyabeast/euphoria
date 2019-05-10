@@ -5,35 +5,37 @@
       <v-list>
         <v-list-tile avatar>
           <v-list-tile-content>
-            <v-list-tile-title>DEMO 101</v-list-tile-title>
-            <v-list-tile-sub-title>Pause menu</v-list-tile-sub-title>
+            <v-list-tile-title>ДЕМО 101</v-list-tile-title>
+            <v-list-tile-sub-title>Меню паузы</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
 
       <v-divider></v-divider>
 
-      <!-- <v-list>
+
+
+      <v-list>
         <v-list-tile>
-          <v-list-tile-action>
-            <v-switch v-model="message" color="purple"></v-switch>
-          </v-list-tile-action>
-          <v-list-tile-title>Enable messages</v-list-tile-title>
+          <v-btn
+            href="app.apk"
+            outline color="indigo"
+        >
+          Скачать APK
+        </v-btn>
         </v-list-tile>
 
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-switch v-model="hints" color="purple"></v-switch>
-          </v-list-tile-action>
-          <v-list-tile-title>Enable hints</v-list-tile-title>
-        </v-list-tile>
-      </v-list> -->
+      </v-list>
+
+
 
       <v-card-actions>
         <v-spacer></v-spacer>
 
-        <v-btn flat @click="onResumeClick">Resume</v-btn>
-        <v-btn color="primary" flat @click="onSettingsClick">Settings</v-btn>
+        
+        <v-btn flat color="primary" @click="onResumeClick">Продолжить</v-btn>
+        
+        <v-btn  flat color="secondary" @click="onSettingsClick">Настройки</v-btn>
       </v-card-actions>
     </v-card>
     <!-- <div

@@ -1,6 +1,7 @@
 <template>
     <v-app
         class="euphoria root"
+        v-bind:class="{ overlayActive: (pauseMenuShown || settingsShown) }"
         :data-browser-name="$store.state.browserName"
         :data-mobile-device="$store.state.mobileDevice ? 1 : 0"
     >
@@ -9,14 +10,22 @@
             ref="wonderland"
         ></Wonderland>
 
+        <div class="overlay"
+            v-if="pauseMenuShown || settingsShown"
+        ></div>
+
         <Pause
-            v-if="pauseMenuShown"
+            v-show="pauseMenuShown"
             @showSettings="onShowSettings"
             @resume="onResumeClick"
         />
+        
         <Settings 
-            v-if="settingsShown"
+            v-show="settingsShown"
             @exit="onSettingsExit"
+            @bumpmapping="$refs.wonderland.setBumpmapping($event)"
+            @bumpmappingLevel="$refs.wonderland.setBumpmappingLevel($event)"
+            @lightDistance="$refs.wonderland.setLightDistance($event)"
         />
     </v-app>
 </template>

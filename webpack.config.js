@@ -79,7 +79,12 @@ let webpackConfig = {
 
                 }
             ],
-        }, ]
+        }, {
+            test: /\.(ttf|eot|svg|png|woff(2)?)(\?[a-z0-9]+)?$/,
+            use: [{
+              loader: 'file-loader'
+            }]
+        }]
     },
     resolve: {
         modules: ["src", "node_modules", "res"],

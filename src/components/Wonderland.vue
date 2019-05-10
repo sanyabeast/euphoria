@@ -75,7 +75,7 @@ const config = {
             texture: 'res/pics/hearts_king.png',
             bumpmap: 'res/pics/bump_hearts_king.png',
             aspect: 5 / 7,
-            bumpScale: 18,
+            bumpScale: 15,
             count: 2,
             sizeDivider: 2.5
         },
@@ -83,7 +83,7 @@ const config = {
             texture: 'res/pics/hearts_queen.png',
             bumpmap: 'res/pics/bump_hearts_queen.png',
             aspect: 5 / 7,
-            bumpScale: 18,
+            bumpScale: 15,
             count: 2,
             sizeDivider: 2.5
         },
@@ -91,14 +91,14 @@ const config = {
             texture: 'res/pics/queen.png',
             bumpmap: 'res/pics/bump_queen.png',
             aspect: 5 / 7,
-            bumpScale: 18,
+            bumpScale: 15,
             count: 2,
             sizeDivider: 2.5
         },
         eight: {
             texture: 'res/pics/eight.png',
             bumpmap: 'res/pics/bump_eight.png',
-            bumpScale: 18,
+            bumpScale: 15,
             aspect: 5 / 7,
             count: 2,
             sizeDivider: 2.5
@@ -415,6 +415,33 @@ export default {
         
             // run the renderer
         },
+        setBumpmapping ( enabled ) {
+            forEach ( modules.cards, ( card )=>{
+                if (enabled){
+                    card.material.bumpMap = card.material.bumpMap || card.$bumpMap
+                } else {
+                    card.$bumpMap = card.$bumpMap || card.material.bumpMap
+                    card.material.bumpMap = null
+                }
+
+                card.material.needsUpdate = true;
+            } )
+
+            this.renderFrame()
+        },  
+        setBumpmappingLevel ( bumpScale ) {
+            forEach ( modules.cards, ( card )=>{
+                card.material.bumpScale = bumpScale
+                card.material.needsUpdate = true;
+            } )
+
+            this.renderFrame()
+        },  
+        setLightDistance ( value ) {
+            value /= 1000
+            modules.lightGroup.position.z = modules.camera.position.z * value
+            this.renderFrame()
+        }, 
         updateMatterPlanes () {
            
             if (!modules.matter.engine) return
@@ -455,8 +482,10 @@ export default {
 
             this.rafId = requestAnimationFrame( ()=> this.render() )
 
-            this.updateThings( delta )
-
+            this.renderFrame( delta )
+        },
+        renderFrame ( delta ) {
+            this.updateThings( delta || 0 )
             modules.renderer.render( modules.scene, modules.camera )
         },
         stopRendering () {
