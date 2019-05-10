@@ -5,6 +5,7 @@ html, body {
 	overflow: hidden;
 	-ms-touch-action: manipulation;
 	touch-action: manipulation;
+	background-color: #000000;
 }
 
 * {
@@ -117,7 +118,8 @@ h1, h2 {
 
 		    i {
 		    	font-size: 44px;
-		    	color: #00bcd4;
+		    	color: #fff;
+		    	background: rgba(0, 0, 0, 0.57);
 		    }
 		}
 		

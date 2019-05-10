@@ -25,7 +25,14 @@
                 Скачать APK
             </v-btn>
         </v-list-tile>
-
+        <v-list-tile avatar>
+          <v-btn
+                outline color="red"
+                @click="reload()"
+            >
+                Перезапустить
+            </v-btn>
+        </v-list-tile>
       </v-list>
 
 
@@ -68,6 +75,9 @@ export default {
         },
         onSettingsClick ( evt ) {
             this.$emit( "showSettings" )
+        },
+        reload () {
+            window.location.reload()
         }
     }
 }

@@ -70,38 +70,57 @@ const config = {
     cameraFOV: 60,
     maxVelocity: 120,
     boxWallThickness: 1,
+    bumpScale: 6,
     cardTextures: {
         hearts_king: {
             texture: 'res/pics/hearts_king.png',
             bumpmap: 'res/pics/bump_hearts_king.png',
             aspect: 5 / 7,
-            bumpScale: 19,
-            count: 3,
+            count: 2,
             sizeDivider: 2.5
         },
         hearts_queen: {
             texture: 'res/pics/hearts_queen.png',
             bumpmap: 'res/pics/bump_hearts_queen.png',
             aspect: 5 / 7,
-            bumpScale: 19,
-            count: 3,
+            count: 2,
             sizeDivider: 2.5
         },
         queen: {
             texture: 'res/pics/queen.png',
             bumpmap: 'res/pics/bump_queen.png',
             aspect: 5 / 7,
-            bumpScale: 19,
-            count: 3,
+            count: 2,
             sizeDivider: 2.5
         },
         eight: {
             texture: 'res/pics/eight.png',
             bumpmap: 'res/pics/bump_eight.png',
-            bumpScale: 19,
             aspect: 5 / 7,
-            count: 3,
+            count: 2,
             sizeDivider: 2.5
+        },
+        paint: {
+            texture: 'res/pics/paint.png',
+            bumpmap: 'res/pics/bump_paint.png',
+            aspect: 1,
+            count: 1,
+            sizeDivider: 2.5
+        },
+        brick: {
+            texture: 'res/pics/brick.png',
+            bumpmap: 'res/pics/bump_brick.png',
+            aspect: 1,
+            count: 1,
+            sizeDivider: 2.5,
+        },
+        stone: {
+            texture: 'res/pics/stone.png',
+            bumpmap: 'res/pics/bump_stone.png',
+            aspect: 1,
+            count: 1,
+            sizeDivider: 2.5,
+            geometry: "circle",
         }
     },
 }
@@ -184,7 +203,14 @@ export default {
                     let x = modules.size.x / 2
                     let y = modules.size.y / 2
 
-                    let geometry = new THREE.PlaneGeometry( width, height, 1)
+                    let geometry
+
+                    if ( data.geometry == "circle" ) {
+                        geometry = new THREE.CircleGeometry( height / 2, 16)
+                    } else {
+                        geometry = new THREE.PlaneGeometry( width, height, 1)
+                    }
+
                     // geometry.translate( height / 2, width / 2, 0 )
                     let material = new THREE.MeshPhongMaterial( { 
                         color: 0xffffff, 
@@ -194,7 +220,7 @@ export default {
                     })
 
                     material.bumpMap = bumpMap
-                    material.bumpScale = data.bumpScale || 1
+                    material.bumpScale = config.bumpScale || 1
 
                     let card = new THREE.Mesh ( geometry, material )
 
@@ -211,10 +237,19 @@ export default {
 
                     modules.cards.push( card )
 
-                    let matterBody = Bodies.rectangle(x, y, width, height );
+                    
+                    let matterBody
+
+                    if ( data.geometry == "circle" ) {
+                        matterBody = Bodies.circle(x, y, height / 2 );
+                    } else {
+                        matterBody = Bodies.rectangle(x, y, width, height );
+                    }
+
+
                     Matter.Body.setAngle( matterBody, Math.random() * Math.PI * 2 )
 
-                    Matter.Body.setMass( matterBody, Math.pow( width, 1 ) )
+                    Matter.Body.setMass( matterBody, data.mass || Math.pow( width, 1 ) )
 
                     matterBody.friction = 0.01;
                     matterBody.frictionAir = 0.02;
