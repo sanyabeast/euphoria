@@ -73,7 +73,7 @@ const config = {
             texture: 'res/pics/hearts_king.png',
             bumpmap: 'res/pics/bump_hearts_king.png',
             aspect: 5 / 7,
-            bumpScale: 10,
+            bumpScale: 18,
             count: 2,
             sizeDivider: 2.5
         },
@@ -81,7 +81,7 @@ const config = {
             texture: 'res/pics/hearts_queen.png',
             bumpmap: 'res/pics/bump_hearts_queen.png',
             aspect: 5 / 7,
-            bumpScale: 10,
+            bumpScale: 18,
             count: 2,
             sizeDivider: 2.5
         },
@@ -89,14 +89,14 @@ const config = {
             texture: 'res/pics/queen.png',
             bumpmap: 'res/pics/bump_queen.png',
             aspect: 5 / 7,
-            bumpScale: 10,
+            bumpScale: 18,
             count: 2,
             sizeDivider: 2.5
         },
         eight: {
             texture: 'res/pics/eight.png',
             bumpmap: 'res/pics/bump_eight.png',
-            bumpScale: 10,
+            bumpScale: 18,
             aspect: 5 / 7,
             count: 2,
             sizeDivider: 2.5
@@ -196,6 +196,15 @@ export default {
 
                     let card = new THREE.Mesh ( geometry, material )
 
+                    TweenMax.fromTo( card.rotation, Math.floor(3 + Math.random() * 4), {
+                        y: -Math.PI / 24,
+                    }, {
+                        y: Math.PI / 24,
+                        repeat: -1,
+                        ease: Back.easeInOut.config(1.7),
+                        yoyo: true
+                    } )
+
                     modules.scene.add( card )
 
                     modules.cards.push( card )
@@ -219,8 +228,8 @@ export default {
             let self = this
 
             let vertShader = require( "raw-loader!shaders/bg.vert" ).default
-            // let fragShader = require( "raw-loader!shaders/bg.frag" ).default
-            let fragShader = require( "raw-loader!shaders/helix.frag" ).default
+            let fragShader = require( "raw-loader!shaders/bg.frag" ).default
+            // let fragShader = require( "raw-loader!shaders/helix.frag" ).default
 
             let geometry = new THREE.PlaneGeometry( 1, 1, 1)
             // geometry.translate( height / 2, width / 2, 0 )
@@ -324,32 +333,50 @@ export default {
                 canvas: canvasElement,
             })
 
-            let pointLight = new THREE.PointLight( 0xf6daf6, 1, 100000 );
-            pointLight.intensity = 1;
+            let lightGroup = new THREE.Group()
 
-            TweenMax.to( pointLight, 5, {
+            let pointLightA = new THREE.PointLight( 0xff91e1, 1, 100000 );
+            pointLightA.intensity = 1;
+
+            let pointLightB = new THREE.PointLight( 0xabf6ff, 1, 100000 );
+            pointLightB.intensity = 1;
+
+
+            TweenMax.to( pointLightA, 6, {
                 intensity: 1.4,
                 repeat: -1,
                 yoyo: true
             } )
 
-            // TweenMax.to( pointLight.color, 10, {
-            //     color: 0xFF0000,
-            //     r: 255/255,
-            //     g: 228/255,
-            //     b: 163/255,
-            //     repeat: -1,
-            //     yoyo: true
-            // } )
+            TweenMax.fromTo( pointLightA.position, 2, {
+                x: -500
+            }, {
+                x: 500,
+                repeat: -1,
+                yoyo: true
+            } )
 
-            scene.add(pointLight)
+            TweenMax.fromTo( pointLightB.position, 3, {
+                y: -500
+            }, {
+                y: 500,
+                repeat: -1,
+                yoyo: true
+            } )
+
+            lightGroup.add( pointLightA )
+            lightGroup.add( pointLightB )
+
+            scene.add(lightGroup)
 
             renderer.setClearColor(0x000000)            
 
             modules.scene = scene
             modules.camera = camera
             modules.renderer = renderer
-            modules.pointLight = pointLight
+            modules.lightGroup = lightGroup
+            modules.pointLightA = pointLightA
+            modules.pointLightB = pointLightB
 
             setInterval( ()=>{
                 modules.time.x += 0.001
@@ -439,11 +466,11 @@ export default {
                 let height = rect.height * window.devicePixelRatio
 
                 modules.camera.aspect = width/ height
-                modules.camera.position.x = modules.pointLight.position.x = width / 2
-                modules.camera.position.y = modules.pointLight.position.y = -height / 2
-                modules.camera.position.z = modules.pointLight.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
+                modules.camera.position.x = modules.lightGroup.position.x = width / 2
+                modules.camera.position.y = modules.lightGroup.position.y = -height / 2
+                modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.pointLight.position.z *= 0.555;
+                modules.lightGroup.position.z *= 0.444;
 
                 modules.size.x = width
                 modules.size.y = height
