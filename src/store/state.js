@@ -7,6 +7,7 @@ const device = new Device()
 
 
 var state = {
+	isHybridApp: typeof window.native == "object",
 	$root: null,
 	paused: false,
 	browserName: browser.getBrowserName().toLowerCase(),

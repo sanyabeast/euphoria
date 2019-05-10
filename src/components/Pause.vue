@@ -18,7 +18,7 @@
       <v-list>
         <v-list-tile>
             <v-btn
-                v-if="typeof window.native == `undefined`"
+                v-if="!$store.state.isHybridApp"
                 href="app.apk"
                 outline color="indigo"
             >

@@ -21,9 +21,9 @@
                <v-tab key="0">
                   Освещение
                </v-tab>
-               <v-tab key="1">
+              <!--  <v-tab key="1">
                   Симуляция
-               </v-tab>
+               </v-tab> -->
             </v-tabs>
 
             <v-tabs-items v-model="tab" class="tab-items">
@@ -38,7 +38,7 @@
                      </v-card-text>
                   </v-card>
                </v-tab-item>
-               <<!-- v-tab-item key="1">
+               <!-- v-tab-item key="1">
                   <v-card flat>
                      <v-card-text>Coming Soon</v-card-text>
                   </v-card>
