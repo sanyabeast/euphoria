@@ -84,7 +84,7 @@ const config = {
             bumpmap: 'res/pics/bump_hearts_queen.png',
             aspect: 5 / 7,
             bumpScale: 15,
-            count: 2,
+            count: 3,
             sizeDivider: 2.5
         },
         queen: {
@@ -100,7 +100,7 @@ const config = {
             bumpmap: 'res/pics/bump_eight.png',
             bumpScale: 15,
             aspect: 5 / 7,
-            count: 2,
+            count: 3,
             sizeDivider: 2.5
         }
     },
@@ -214,7 +214,7 @@ export default {
                     let matterBody = Bodies.rectangle(x, y, width, height );
                     Matter.Body.setAngle( matterBody, Math.random() * Math.PI * 2 )
 
-                    Matter.Body.setMass( matterBody, Math.pow( width, 2 ) )
+                    Matter.Body.setMass( matterBody, Math.pow( width, 1 ) )
 
                     matterBody.friction = 0.01;
                     matterBody.frictionAir = 0.02;
@@ -482,10 +482,10 @@ export default {
 
             this.rafId = requestAnimationFrame( ()=> this.render() )
 
+            this.updateThings( delta || 0 )
             this.renderFrame( delta )
         },
-        renderFrame ( delta ) {
-            this.updateThings( delta || 0 )
+        renderFrame ( ) {
             modules.renderer.render( modules.scene, modules.camera )
         },
         stopRendering () {
