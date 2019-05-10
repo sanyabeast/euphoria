@@ -17,12 +17,13 @@
 
       <v-list>
         <v-list-tile>
-          <v-btn
-            href="app.apk"
-            outline color="indigo"
-        >
-          Скачать APK
-        </v-btn>
+            <v-btn
+                v-if="typeof window.native == `undefined`"
+                href="app.apk"
+                outline color="indigo"
+            >
+                Скачать APK
+            </v-btn>
         </v-list-tile>
 
       </v-list>
