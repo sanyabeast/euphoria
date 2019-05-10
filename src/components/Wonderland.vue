@@ -75,15 +75,15 @@ const config = {
             texture: 'res/pics/hearts_king.png',
             bumpmap: 'res/pics/bump_hearts_king.png',
             aspect: 5 / 7,
-            bumpScale: 15,
-            count: 2,
+            bumpScale: 19,
+            count: 3,
             sizeDivider: 2.5
         },
         hearts_queen: {
             texture: 'res/pics/hearts_queen.png',
             bumpmap: 'res/pics/bump_hearts_queen.png',
             aspect: 5 / 7,
-            bumpScale: 15,
+            bumpScale: 19,
             count: 3,
             sizeDivider: 2.5
         },
@@ -91,14 +91,14 @@ const config = {
             texture: 'res/pics/queen.png',
             bumpmap: 'res/pics/bump_queen.png',
             aspect: 5 / 7,
-            bumpScale: 15,
-            count: 2,
+            bumpScale: 19,
+            count: 3,
             sizeDivider: 2.5
         },
         eight: {
             texture: 'res/pics/eight.png',
             bumpmap: 'res/pics/bump_eight.png',
-            bumpScale: 15,
+            bumpScale: 19,
             aspect: 5 / 7,
             count: 3,
             sizeDivider: 2.5
@@ -178,7 +178,7 @@ export default {
                 let bumpMap = new THREE.TextureLoader().load( data.bumpmap );
 
                 for ( let a = 0; a < data.count; a++ ) {
-                    let height = (modules.size.y / ( 4 + ( Math.floor( Math.random() * 4 ) ) ) )
+                    let height = (Math.min(modules.size.x, modules.size.y) / ( 3 + ( Math.floor( Math.random() * 4 ) ) ) )
                     let width = height * data.aspect
 
                     let x = modules.size.x / 2
@@ -300,8 +300,8 @@ export default {
                    return
                }
 
-               if (newGravityX > 1) newGravityX = 2
-               if (newGravityY > 1) newGravityY = 2
+               if (newGravityX > 1) newGravityX = 6
+               if (newGravityY > 1) newGravityY = 6
 
                modules.matter.engine.world.gravity.y = (newGravityX)
                modules.matter.engine.world.gravity.x = (newGravityY)
@@ -507,7 +507,7 @@ export default {
                 modules.camera.position.y = modules.lightGroup.position.y = -height / 2
                 modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.lightGroup.position.z *= 0.444;
+                modules.lightGroup.position.z *= 0.369;
 
                 modules.size.x = width
                 modules.size.y = height

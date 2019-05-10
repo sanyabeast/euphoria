@@ -56,8 +56,8 @@
 		data () {
 			return {
 				bumpmapping: true,
-				bumpmappingLevel: 54,
-				lightDistance: 700
+				bumpmappingLevel: 19,
+				lightDistance: 369
 			}
 		},
 	}
