@@ -21,6 +21,12 @@ h1, h2 {
 	width: 100%;
 	height: 100%;
 	
+	.application--wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
 	.wonderland {
 		position: absolute;
 		width: 100%;
@@ -97,41 +103,27 @@ h1, h2 {
 		    font-size: 24px;
 		    font-weight: 800;
 		    width: 132px;
-		    height: 64px;
+		    height: 100px;
 		    text-align: center;
 		    position: absolute;
 		    top: 0;
 		    right: 0;
 		    z-index: 2;
 		    cursor: pointer;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+
+		    i {
+		    	font-size: 44px;
+		    	color: #00bcd4;
+		    }
 		}
 		
 	}
 
 	.pause-menu {
-	    background: rgba(246, 43, 9, 0.71);
-	    width: 66vw;
-	    height: 60vw;
-	    position: absolute;
-	    left: 50%;
-	    top: 50%;
-	    transform: translate(-50%, -50%);
-	    display: flex;
-	    flex-direction: column;
-	    justify-content: center;
-	    align-items: center;
-
-	   	p, a {
-	   		color: #fff;
-		    font-size: 36px;
-		    font-weight: 800;
-	   	}
-
-	   	a {
-	   		font-size: 24px;
-	   		color: #ccc;
-	   		cursor: pointer;
-	   	}
+	    width: 80%;
 	}
 
 }
@@ -204,4 +196,29 @@ h1, h2 {
   100% {
     transform: translate(-50%, -50%) scale(1)
   }
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
 }

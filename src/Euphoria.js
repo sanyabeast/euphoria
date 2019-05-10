@@ -1,9 +1,14 @@
 import _ from "./Helpers"
 
+import "vuetify/dist/vuetify.min.css"
+
 import Vue from "vue"
+import Vuetify from 'vuetify'
 import StoreCreator from "store/StoreCreator"
 import App from "components/App.vue"
 import packageObj from "../package.json"
+
+Vue.use(Vuetify)
 
 window.clog = console.log.bind(console)
 

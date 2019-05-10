@@ -42,7 +42,9 @@
         <p 
             class="pause-button"
             @click="onPauseClick"
-        >||</p>
+        >
+            <i class="material-icons">pause</i>
+        </p>
     </div>
 </template>
 
@@ -298,6 +300,9 @@ export default {
                    return
                }
 
+               if (newGravityX > 1) newGravityX = 2
+               if (newGravityY > 1) newGravityY = 2
+
                modules.matter.engine.world.gravity.y = (newGravityX)
                modules.matter.engine.world.gravity.x = (newGravityY)
 
@@ -403,6 +408,9 @@ export default {
             modules.matter.planes.bottom = bottomPlane
             // run the engine
             modules.matter.engine = engine
+
+            modules.matter.engine.world.gravity.y = (0)
+            modules.matter.engine.world.gravity.x = (0)
             // modules.matter.render = render
         
             // run the renderer
@@ -532,8 +540,7 @@ export default {
             }
         },
         onPauseClick () {
-            this.stopRendering()
-            this.$store.state.paused = true
+            this.$emit( "pauseClick" )
         },
         onRootClick () {
             // try {

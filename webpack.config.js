@@ -45,6 +45,17 @@ let webpackConfig = {
                 }
             }]
         }, {
+            test: /\.css$/,
+            use: [
+                {
+                    loader: "style-loader"
+                },
+                {
+                    loader: 'css-loader',
+                }
+
+            ]
+        }, {
             test: /\.scss$/,
             use: [
                 {
@@ -59,7 +70,15 @@ let webpackConfig = {
             ]
         }, {
             test: /\.vue$/,
-            loader: "vue-loader",
+            use: [
+                {
+                    loader: "vue-loader",
+                    options: {
+                        hot: true
+                    }
+
+                }
+            ],
         }, ]
     },
     resolve: {
