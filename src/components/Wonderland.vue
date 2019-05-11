@@ -494,7 +494,7 @@ export default {
                 modules.camera.position.y = modules.lightGroup.position.y = -height / 2
                 modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.lightGroup.position.z *= 0.360;
+                modules.lightGroup.position.z *= 0.300;
 
                 modules.size.x = width
                 modules.size.y = height
