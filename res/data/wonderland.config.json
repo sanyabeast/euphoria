@@ -1,0 +1,54 @@
+{
+    "velocityMultiplier": 20,
+    "gravityMultiplier": 0.2,
+    "cameraFOV": 60,
+    "maxVelocity": 400,
+    "boxWallThickness": 1,
+    "bumpScale": 11,
+    "cardTextures": {
+        "hearts_king": {
+            "texture": "res/pics/hearts_king.png",
+            "bumpmap": "res/pics/bumpmaps/paper.png",
+            "aspect": 0.71,
+            "count": 2
+        },
+        "hearts_queen": {
+            "texture": "res/pics/hearts_queen.png",
+            "bumpmap": "res/pics/bumpmaps/softpaper.jpg",
+            "aspect": 0.71,
+            "count": 2
+        },
+        "queen": {
+            "texture": "res/pics/queen.png",
+            "bumpmap": "res/pics/bumpmaps/someth2.jpg",
+            "aspect": 0.71,
+            "count": 2
+        },
+        "eight": {
+            "texture": "res/pics/eight.png",
+            "bumpmap": "res/pics/bumpmaps/waves2.jpg",
+            "aspect": 0.71,
+            "count": 2
+        },
+        "paint": {
+            "texture": "res/pics/paint.png",
+            "bumpmap": "res/pics/bump_paint.png",
+            "aspect": 1,
+            "count": 1
+        },
+        "brick": {
+            "texture": "res/pics/brick.png",
+            "bumpmap": "res/pics/bump_brick.png",
+            "aspect": 1,
+            "count": 1,
+            "geometry": "box"
+        },
+        "stone": {
+            "texture": "res/pics/stone.png",
+            "bumpmap": "res/pics/bump_stone.png",
+            "aspect": 1,
+            "count": 1,
+            "geometry": "ring"
+        }
+    }
+}

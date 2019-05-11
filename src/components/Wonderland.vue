@@ -64,66 +64,7 @@ var Engine = Matter.Engine,
     World = Matter.World,
     Bodies = Matter.Bodies;
 
-const config = {
-    velocityMultiplier: 20,
-    gravityMultiplier: 0.2,
-    cameraFOV: 60,
-    maxVelocity: 120,
-    boxWallThickness: 1,
-    bumpScale: 6,
-    cardTextures: {
-        hearts_king: {
-            texture: 'res/pics/hearts_king.png',
-            bumpmap: 'res/pics/bump_hearts_king.png',
-            aspect: 5 / 7,
-            count: 2,
-            sizeDivider: 2.5
-        },
-        hearts_queen: {
-            texture: 'res/pics/hearts_queen.png',
-            bumpmap: 'res/pics/bump_hearts_queen.png',
-            aspect: 5 / 7,
-            count: 2,
-            sizeDivider: 2.5
-        },
-        queen: {
-            texture: 'res/pics/queen.png',
-            bumpmap: 'res/pics/bump_queen.png',
-            aspect: 5 / 7,
-            count: 2,
-            sizeDivider: 2.5
-        },
-        eight: {
-            texture: 'res/pics/eight.png',
-            bumpmap: 'res/pics/bump_eight.png',
-            aspect: 5 / 7,
-            count: 2,
-            sizeDivider: 2.5
-        },
-        paint: {
-            texture: 'res/pics/paint.png',
-            bumpmap: 'res/pics/bump_paint.png',
-            aspect: 1,
-            count: 1,
-            sizeDivider: 2.5
-        },
-        brick: {
-            texture: 'res/pics/brick.png',
-            bumpmap: 'res/pics/bump_brick.png',
-            aspect: 1,
-            count: 1,
-            sizeDivider: 2.5,
-        },
-        stone: {
-            texture: 'res/pics/stone.png',
-            bumpmap: 'res/pics/bump_stone.png',
-            aspect: 1,
-            count: 1,
-            sizeDivider: 2.5,
-            geometry: "circle",
-        }
-    },
-}
+const config = require("data/wonderland.config.json")
 
 const modules = {
     cards: [],
@@ -206,9 +147,15 @@ export default {
                     let geometry
 
                     if ( data.geometry == "circle" ) {
-                        geometry = new THREE.CircleGeometry( height / 2, 16)
+                        geometry = new THREE.RingBufferGeometry( height / 2, 16)
+                    } else if (data.geometry == "ring") {
+                        geometry = new THREE.RingBufferGeometry( height / 3, height / 2, 16)
+                    } else if (data.geometry == "sphere"){
+                        geometry = new THREE.SphereBufferGeometry( height / 2, 16)
+                    } else if (data.geometry == "box"){
+                        geometry = new THREE.BoxBufferGeometry( height * 0.8, height * 0.8, height * 0.8)
                     } else {
-                        geometry = new THREE.PlaneGeometry( width, height, 1)
+                        geometry = new THREE.PlaneBufferGeometry( width, height, 1)
                     }
 
                     // geometry.translate( height / 2, width / 2, 0 )
@@ -224,10 +171,12 @@ export default {
 
                     let card = new THREE.Mesh ( geometry, material )
 
-                    TweenMax.fromTo( card.rotation, Math.floor(3 + Math.random() * 4), {
+                    TweenMax.fromTo( card.rotation, Math.floor(4 + Math.random() * 5), {
                         y: -Math.PI / 24,
+                        x: Math.PI / 24,
                     }, {
                         y: Math.PI / 24,
+                        x: -Math.PI / 18,
                         repeat: -1,
                         ease: Back.easeInOut.config(1.7),
                         yoyo: true
@@ -335,8 +284,8 @@ export default {
                    return
                }
 
-               if (newGravityX > 1) newGravityX = 6
-               if (newGravityY > 1) newGravityY = 6
+               if (newGravityX > 1) newGravityX = 2
+               if (newGravityY > 1) newGravityY = 2
 
                modules.matter.engine.world.gravity.y = (newGravityX)
                modules.matter.engine.world.gravity.x = (newGravityY)
@@ -375,33 +324,36 @@ export default {
 
             let lightGroup = new THREE.Group()
 
-            let pointLightA = new THREE.PointLight( 0xff91e1, 1, 100000 );
+            let pointLightA = new THREE.PointLight( 0xff5ae2, 1, 100000 );
             pointLightA.intensity = 1;
 
-            let pointLightB = new THREE.PointLight( 0xabf6ff, 1, 100000 );
+            let pointLightB = new THREE.PointLight( 0x52feff, 1, 100000 );
             pointLightB.intensity = 1;
 
 
             TweenMax.to( pointLightA, 6, {
                 intensity: 1.4,
                 repeat: -1,
-                yoyo: true
+                yoyo: true,
+                ease: Back.easeInOut.config(1.3),
             } )
 
-            TweenMax.fromTo( pointLightA.position, 2, {
+            TweenMax.fromTo( pointLightA.position, 4, {
                 x: -500
             }, {
                 x: 500,
                 repeat: -1,
-                yoyo: true
+                yoyo: true,
+                ease: Back.easeInOut.config(1.3),
             } )
 
-            TweenMax.fromTo( pointLightB.position, 3, {
+            TweenMax.fromTo( pointLightB.position, 5, {
                 y: -500
             }, {
                 y: 500,
                 repeat: -1,
-                yoyo: true
+                yoyo: true,
+                ease: Back.easeInOut.config(1.3),
             } )
 
             lightGroup.add( pointLightA )
@@ -542,7 +494,7 @@ export default {
                 modules.camera.position.y = modules.lightGroup.position.y = -height / 2
                 modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.lightGroup.position.z *= 0.369;
+                modules.lightGroup.position.z *= 0.360;
 
                 modules.size.x = width
                 modules.size.y = height
