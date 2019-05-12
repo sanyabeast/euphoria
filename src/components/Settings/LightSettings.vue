@@ -124,8 +124,8 @@
 				bumpmapping: true,
 				bumpmappingLevel: 10,
 				lightDistance: 450,
-				lightAColor: '#F64272',
-				lightBColor: '#51e5db',
+				lightAColor: '#8b5aff',
+				lightBColor: '#ffdba3',
 				lightIntensity: 1,
       			colors: [
       				['#F64272', '#F6648B', '#F493A7', '#F891A6', '#FFCCD5' ],

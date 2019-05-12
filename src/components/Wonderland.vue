@@ -54,6 +54,7 @@ import * as THREE from "three"
 import { forEach } from "lodash"
 import Hamer from "hammerjs"
 import { TweenMax } from "gsap/TweenMax"
+import screenfull from "screenfull"
 
 const Matter = require("matter-js")
 
@@ -263,6 +264,10 @@ export default {
 
             // Subscribe to a desired event
             manager.on('swipe', (e)=>{
+                if (!this.$store.state.isHybridApp){
+                    screenfull.request()
+                }
+
                 e.preventDefault()
                 this.setVelocity( e.overallVelocityX * config.velocityMultiplier * window.devicePixelRatio, e.overallVelocityY * config.velocityMultiplier * window.devicePixelRatio )
             });
@@ -324,11 +329,11 @@ export default {
 
             let lightGroup = new THREE.Group()
 
-            let pointLightA = new THREE.PointLight( 0xF64272, 1, 100000 );
+            let pointLightA = new THREE.PointLight( 0x8b5aff, 1, 100000 );
             pointLightA.intensity = 1;
             pointLightA.position.y = -250
 
-            let pointLightB = new THREE.PointLight( 0x51e5db, 1, 100000 );
+            let pointLightB = new THREE.PointLight( 0xffdba3, 1, 100000 );
             pointLightB.intensity = 1;
             pointLightB.position.y = 250
 
