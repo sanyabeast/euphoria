@@ -21,28 +21,33 @@
                <v-tab key="0">
                   Освещение
                </v-tab>
-              <!--  <v-tab key="1">
+               <v-tab key="1">
                   Симуляция
-               </v-tab> -->
+               </v-tab>
             </v-tabs>
 
-            <v-tabs-items v-model="tab" class="tab-items">
+            <v-tabs-items v-model="tab" class="tab-items" touchless>
                <v-tab-item key="0">
                   <v-card flat>
-                     <v-card-text>
-                         <LightSettings
-                            @bumpmapping="$emit(`bumpmapping`, $event)"
-                            @bumpmappingLevel="$emit(`bumpmappingLevel`, $event)"
-                            @lightDistance="$emit(`lightDistance`, $event)"
-                         />
-                     </v-card-text>
+                     <LightSettings
+                        @bumpmapping="$emit(`bumpmapping`, $event)"
+                        @bumpmappingLevel="$emit(`bumpmappingLevel`, $event)"
+                        @lightDistance="$emit(`lightDistance`, $event)"
+                     />
                   </v-card>
                </v-tab-item>
-               <!-- v-tab-item key="1">
+               <v-tab-item key="1">
                   <v-card flat>
-                     <v-card-text>Coming Soon</v-card-text>
+                     <SimSettings
+                        @physicEnabled="$emit(`physicEnabled`, $event)"
+                        @matterObjectsFriction="$emit(`matterObjectsFriction`, $event)"
+                        @matterObjectsRestitution="$emit(`matterObjectsRestitution`, $event)"
+                        @gyroGravityEnabled="$emit(`gyroGravityEnabled`, $event)"
+                        @gravityX="$emit(`gravityX`, $event)"
+                        @gravityY="$emit(`gravityY`, $event)"
+                     />
                   </v-card>
-               </v-tab-item> -->
+               </v-tab-item>
             </v-tabs-items>
 
       </v-layout>
@@ -64,9 +69,10 @@
 
 import data from "data/data.json"
 import LightSettings from "components/Settings/LightSettings.vue"
+import SimSettings from "components/Settings/SimSettings.vue"
 
 export default {
-    components : { LightSettings },
+    components : { LightSettings, SimSettings },
     data () {
         return {
             apk_dl_url: data.apk_dl_url,

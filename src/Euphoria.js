@@ -28,6 +28,7 @@ class Euphoria {
 			return $store.getters.translation[ localeKey ] || ""
 		}
 
+
 		this.$store.commit("setRoot", new Vue({
 	      	el:  this.dom,
 	      	render: createElement => {

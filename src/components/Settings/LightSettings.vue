@@ -6,6 +6,8 @@
 	  >
 	    <v-subheader>Настройки эффектов освещения</v-subheader>
 
+	    <v-subheader>Настройки бамаппинга</v-subheader>
+
 	    <v-list-tile @click="$emit(`bumpmapping`, bumpmapping)">
 	      <v-list-tile-action>
 	        <v-checkbox v-model="bumpmapping"></v-checkbox>
@@ -32,6 +34,8 @@
     		
     	</v-card>
 
+    	<v-subheader>Источники света</v-subheader>
+
 	    <v-card flat color="transparent">
 	    	<v-subheader>Высота источника света</v-subheader>
   
@@ -41,24 +45,42 @@
 	          	thumb-label="always"
 	          	min="1"
 	          	max="2000"
-	          	@change="$emit(`lightDistance`, $event)"
+	          	@change="$event.preventDefault(); $emit(`lightDistance`, $event)"
 		      ></v-slider>
 		    </v-card-text>
     		
     	</v-card>
-	  </v-list>
+
+    	<v-list-tile @click="$emit(`bumpmapping`, bumpmapping)">
+	      	<swatches
+		      	v-model="color"
+	
+		      	:colors="colors"
+	
+		      	row-length="6"
+		      	shapes="circles"
+		      	show-border
+		      	popover-to="left"
+		    ></swatches>
+	    </v-list-tile>
+	 </v-list>
 	
 </template>
 
 <script type="text/javascript">
 	
+	import Swatches from 'vue-swatches'
+
 	export default {
 		data () {
 			return {
 				bumpmapping: true,
 				bumpmappingLevel: 10,
-				lightDistance: 300
+				lightDistance: 300,
+				color: '#F64272',
+      			colors: ['#F64272', '#F6648B', '#F493A7', '#F891A6', '#FFCCD5', '']
 			}
 		},
+		components: { Swatches }
 	}
 </script>

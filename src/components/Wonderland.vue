@@ -82,7 +82,10 @@ export default {
     data () {
         return {
             totalScore: 0,
-            prevRenderedFrameTime: +new Date()
+            prevRenderedFrameTime: +new Date(),
+            physicEnabled: true,
+            renderingActive: false,
+            gyroGravityEnabled: true
         }
     },
     watch: {
@@ -166,17 +169,19 @@ export default {
                         
                     })
 
+                    material.transparent = true
+
                     material.bumpMap = bumpMap
                     material.bumpScale = config.bumpScale || 1
 
                     let card = new THREE.Mesh ( geometry, material )
 
                     TweenMax.fromTo( card.rotation, Math.floor(4 + Math.random() * 5), {
-                        y: -Math.PI / 24,
-                        x: Math.PI / 24,
+                        y: -Math.PI / 32,
+                        x: Math.PI / 32,
                     }, {
-                        y: Math.PI / 24,
-                        x: -Math.PI / 18,
+                        y: Math.PI / 32,
+                        x: -Math.PI / 32,
                         repeat: -1,
                         ease: Back.easeInOut.config(1.7),
                         yoyo: true
@@ -202,7 +207,7 @@ export default {
 
                     matterBody.friction = 0.01;
                     matterBody.frictionAir = 0.02;
-                    matterBody.restitution = 0.01;
+                    matterBody.restitution = 0.1;
 
                     card.matterBody = matterBody
 
@@ -271,27 +276,29 @@ export default {
             window.addEventListener('deviceorientation', ( event )=> {
                if ( !modules.matter.engine ) return
 
-               let alpha = Math.floor(event.alpha)
-               let beta  = Math.floor(event.beta)
-               let gamma = Math.floor(event.gamma)
+               if ( this.gyroGravityEnabled ) {
+                   let alpha = Math.floor(event.alpha)
+                   let beta  = Math.floor(event.beta)
+                   let gamma = Math.floor(event.gamma)
 
-               let newGravityX = beta * config.gravityMultiplier
-               let newGravityY = gamma * config.gravityMultiplier
+                   let newGravityX = beta * config.gravityMultiplier
+                   let newGravityY = gamma * config.gravityMultiplier
 
-               modules.gyro.set( newGravityX, newGravityY  )
+                   modules.gyro.set( newGravityX, newGravityY  )
 
-               if (newGravityX == 0 && newGravityY == 0) {
-                   return
+                   if (newGravityX == 0 && newGravityY == 0) {
+                       return
+                   }
+
+                   if (newGravityX > 1) newGravityX = 2
+                   if (newGravityY > 1) newGravityY = 2
+
+                   modules.matter.engine.world.gravity.y = (newGravityX)
+                   modules.matter.engine.world.gravity.x = (newGravityY)
+
+                   this.$refs.gravityX.textContent = newGravityX.toFixed(2)
+                   this.$refs.gravityY.textContent = newGravityY.toFixed(2)
                }
-
-               if (newGravityX > 1) newGravityX = 2
-               if (newGravityY > 1) newGravityY = 2
-
-               modules.matter.engine.world.gravity.y = (newGravityX)
-               modules.matter.engine.world.gravity.x = (newGravityY)
-
-               this.$refs.gravityX.textContent = newGravityX.toFixed(2)
-               this.$refs.gravityY.textContent = newGravityY.toFixed(2)
 
 
                // console.log(alpha, beta, gamma)
@@ -416,6 +423,22 @@ export default {
 
             this.renderFrame()
         },  
+        setMatterObjectsFriction ( value ) {
+            console.log( value )
+
+            forEach ( modules.cards, ( card )=>{
+                card.matterBody.friction = value
+            } )
+
+        },
+        setMatterObjectsRestitution ( value ) {
+            console.log( value )
+
+            forEach ( modules.cards, ( card )=>{
+                card.matterBody.restitution = value
+            } )
+
+        },
         setBumpmappingLevel ( bumpScale ) {
             forEach ( modules.cards, ( card )=>{
                 card.material.bumpScale = bumpScale
@@ -456,6 +479,7 @@ export default {
         },
         startRendering () {
             this.prevRenderedFrameTime = +new Date()
+            this.renderingActive = true
             // modules.matter.runner = Engine.run(modules.matter.engine);
             this.render()
         },
@@ -476,6 +500,7 @@ export default {
             modules.renderer.render( modules.scene, modules.camera )
         },
         stopRendering () {
+            this.renderingActive = false
             // Matter.Runner.stop( modules.matter.runner )
             cancelAnimationFrame( this.rafId )
         },
@@ -520,8 +545,18 @@ export default {
                 Matter.Body.setVelocity( card.matterBody, { x: x, y: y });
             } )
         },
+        setGravityX ( value ) {
+           modules.matter.engine.world.gravity.x = value
+        },
+        setGravityY ( value ) {
+           modules.matter.engine.world.gravity.y = value
+        },
         updateThings ( delta ) {
-            Matter.Engine.update( modules.matter.engine, delta )
+            
+            if ( this.physicEnabled ) {
+                Matter.Engine.update( modules.matter.engine, delta )
+            }
+
             // Render.run(modules.matter.render);
             
             // modules.cards.kek.rotation.z+=0.001
@@ -558,11 +593,94 @@ export default {
         onPauseClick () {
             this.$emit( "pauseClick" )
         },
-        onRootClick () {
+        onRootClick ( evt ) {
             // try {
             //     document.body.webkitRequestFullscreen()
 
             // } catch ( err ) {}
+
+            let x = evt.pageX
+            let y = evt.pageY
+
+            let object = this.detectIntersection( x * window.devicePixelRatio, y * window.devicePixelRatio )
+
+            console.log( object )
+
+            if ( object && this.physicEnabled ) {
+
+                let currentState = object.$sizeState 
+
+                if ( !currentState ) {
+                    currentState = object.$sizeState = 2
+                }
+
+                currentState++
+
+                if ( currentState > config.scaleLevels.length - 1 ) currentState = 0
+
+
+                let scaleLevel = config.scaleLevels[ currentState ]
+
+                object.$sizeState = currentState
+
+                let scaleX = object.scale.x
+                let scaleY = object.scale.y
+                let scaleZ = object.scale.z
+
+                if ( object.__renderScaleTween ) {
+                    object.__renderScaleTween.kill()
+                    delete object.__renderScaleTween
+                }
+
+                object.__renderScaleTween = TweenMax.to(object.scale, 0.1, {
+                    x: scaleLevel,
+                    y: scaleLevel,
+                    z: scaleLevel,
+                    ease: "easeInOut",
+                    onComplete: ()=>{
+                        delete object.__renderScaleTween
+                    }
+                })
+
+
+                Matter.Body.scale( object.matterBody, 1/scaleX, 1/scaleY )
+                Matter.Body.scale( object.matterBody, scaleLevel, scaleLevel )
+
+                // let target = {  x: scaleX, y: scaleY, z: scaleZ }
+
+                // object.__matterScaleTween = TweenMax.to( target, 0.222, {
+                //     ease: "easeInOut",
+                //     x: scaleLevel,
+                //     y: scaleLevel,
+                //     z: scaleLevel,
+                //     onUpdate: ()=>{
+                //         Matter.Body.scale( object.matterBody, target.x, target.y )
+                //         // Matter.Body.setVelocity(  object.matterBody, 0 )
+                //     }
+                // } )
+            }
+
+        },
+        setPhysicsEnabled ( enabled ) {
+            this.prevRenderedFrameTime = +new Date()
+            this.physicEnabled = enabled
+        },
+        detectIntersection ( x, y ) {
+
+            let result = null
+
+            forEach( modules.cards, ( card, index )=>{
+                let bounds = card.matterBody.bounds
+
+                console.log( `mouse: ${x}:${y}`, `card: [ ${bounds.min.x.toFixed(2)}, ${bounds.min.y.toFixed(2)}; ${bounds.max.x.toFixed(2)},${bounds.max.y.toFixed(2)} ]` )
+
+                if ( x > bounds.min.x && x < bounds.max.x && y > bounds.min.y && y < bounds.max.y ) {
+                    result = card
+                }
+
+            } )
+
+            return result
         }
     }
 
