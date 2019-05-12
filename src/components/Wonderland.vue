@@ -108,7 +108,6 @@ export default {
         }
     },
 	mounted () {
-        // console.log(Hammer)
 
         window.wonder = this
 
@@ -224,7 +223,6 @@ export default {
             let geometry = new THREE.PlaneGeometry( 1, 1, 1)
             // geometry.translate( height / 2, width / 2, 0 )
 
-            console.log(modules.time)
             let material = new THREE.ShaderMaterial( {
                 vertexShader: vertShader,
                 fragmentShader: fragShader,
@@ -244,7 +242,6 @@ export default {
                 }
             } )
 
-            console.log(material, modules.time)
 
             let bg = new THREE.Mesh ( geometry, material )
 
@@ -300,7 +297,6 @@ export default {
                }
 
 
-               // console.log(alpha, beta, gamma)
             });
 
             // window.addEventListener('devicemotion', ( event )=> {
@@ -313,13 +309,11 @@ export default {
             // });
 
             // window.addEventListener('compassneedscalibration', function(event) {
-            //    console.log(event)
             // });
         },  
         setupRenderer () {
             let canvasElement = this.$refs.canvas
 
-            console.log(canvasElement)
 
             let scene = new THREE.Scene()
             let camera = new THREE.PerspectiveCamera( config.cameraFOV, window.innerWidth / window.innerHeight, 0.1, 10000 )
@@ -431,7 +425,6 @@ export default {
             this.renderFrame()
         },  
         setMatterObjectsFriction ( value ) {
-            console.log( value )
 
             forEach ( modules.cards, ( card )=>{
                 card.matterBody.friction = value
@@ -439,7 +432,6 @@ export default {
 
         },
         setMatterObjectsRestitution ( value ) {
-            console.log( value )
 
             forEach ( modules.cards, ( card )=>{
                 card.matterBody.restitution = value
@@ -480,7 +472,6 @@ export default {
             var topPlane = Bodies.rectangle(size.x / 2, -100, size.x, 200, { isStatic: true });
             var bottomPlane = Bodies.rectangle(size.x / 2, size.y + 100, size.x, 200, { isStatic: true });
 
-            console.log(size)
             // add all of the bodies to the world
             World.add(modules.matter.engine.world, [ leftPlane, rightPlane, topPlane, bottomPlane ]);
 
@@ -576,7 +567,6 @@ export default {
             
             // modules.cards.kek.rotation.z+=0.001
 
-            // console.log(modules.cards[0].matterBody.angle)
 
             for ( var a = 0; a < modules.cards.length; a++ ) {
 
@@ -586,7 +576,6 @@ export default {
                 // });
 
                 if (modules.cards[a].matterBody.position.x > modules.size.x * 2) {
-                    // console.log(1)
                     this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
                     this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
 
@@ -619,13 +608,12 @@ export default {
 
             let object = this.detectIntersection( x * window.devicePixelRatio, y * window.devicePixelRatio )
 
-            console.log( object )
 
             if ( object && this.physicEnabled ) {
 
                 let currentState = object.$sizeState 
 
-                if ( !currentState ) {
+                if ( typeof currentState != "number" ) {
                     currentState = object.$sizeState = 2
                 }
 
@@ -657,6 +645,7 @@ export default {
                     }
                 })
 
+                console.log(scaleLevel)
 
                 Matter.Body.scale( object.matterBody, 1/scaleX, 1/scaleY )
                 Matter.Body.scale( object.matterBody, scaleLevel, scaleLevel )
@@ -687,7 +676,6 @@ export default {
             forEach( modules.cards, ( card, index )=>{
                 let bounds = card.matterBody.bounds
 
-                console.log( `mouse: ${x}:${y}`, `card: [ ${bounds.min.x.toFixed(2)}, ${bounds.min.y.toFixed(2)}; ${bounds.max.x.toFixed(2)},${bounds.max.y.toFixed(2)} ]` )
 
                 if ( x > bounds.min.x && x < bounds.max.x && y > bounds.min.y && y < bounds.max.y ) {
                     result = card
