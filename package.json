@@ -1,6 +1,6 @@
 {
     "name": "euphoria",
-    "version": "1.0.57",
+    "version": "1.0.58",
     "main": "index.js",
     "author": "sanyabeast <a.gvrnsk@gmail.com>",
     "license": "MIT",
@@ -67,7 +67,8 @@
         "webpack-bundle-analyzer": "latest",
         "webpack-cli": "latest",
         "webpack-dev-server": "latest",
-        "vue-swatches": "latest"
+        "vue-swatches": "latest",
+        "screenfull": "latest"
     },
     "dependencies": {
         "vue-cli": "^2.9.6"

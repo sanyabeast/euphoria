@@ -30,7 +30,7 @@
             @physicEnabled="$refs.wonderland.setPhysicsEnabled($event)"
             @matterObjectsFriction="$refs.wonderland.setMatterObjectsFriction($event)"
             @matterObjectsRestitution="$refs.wonderland.setMatterObjectsRestitution($event)"
-            @gyroGravityEnabled="$refs.wonderland.gyroGravityEnabled = $event"
+            @gyroGravityEnabled="$refs.wonderland.setGyroGravityEnabled($event)"
             @gravityX="$refs.wonderland.setGravityX($event)"
             @gravityY="$refs.wonderland.setGravityY($event)"
             @lightAColor="$refs.wonderland.setLightColor(`A`, $event)"
@@ -45,6 +45,9 @@ import Button from "components/Button.vue"
 import Pause from "components/Pause.vue"
 import Settings from "components/Settings.vue"
 import Wonderland from "components/Wonderland.vue"
+import screenfull from "screenfull"
+
+console.log(screenfull)
 
 export default {
 	components: { Button, Wonderland, Pause, Settings },
@@ -60,6 +63,12 @@ export default {
         //     evt.stopPropagation()
         //     evt.preventDefault()
         // } )
+
+        if ( !this.$store.state.isHybridApp ) {
+            document.body.addEventListener( "click", ()=>{
+                screenfull.request()
+            } )
+        }
 
         document.body.addEventListener( "touchmove", ( evt )=>{
             evt.stopPropagation()
@@ -96,6 +105,8 @@ export default {
             this.settingsShown = false
             this.pauseMenuShown = false
             this.$refs.wonderland.startRendering()
+        },
+        onAppClick () {            
         }
     }
 

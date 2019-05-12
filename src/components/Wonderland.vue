@@ -410,6 +410,14 @@ export default {
 
             this.renderFrame()
         }, 
+        setGyroGravityEnabled ( enabled ) {
+            this.gyroGravityEnabled = enabled
+
+            if ( !enabled ) {
+                modules.matter.engine.world.gravity.x = 0
+                modules.matter.engine.world.gravity.y = 0
+            }
+        },
         setBumpmapping ( enabled ) {
             forEach ( modules.cards, ( card )=>{
                 if (enabled){
