@@ -166,7 +166,6 @@ export default {
                         color: 0xffffff, 
                         map: texture, 
                         transparent: true,
-                        
                     })
 
                     material.transparent = true
