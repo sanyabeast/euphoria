@@ -136,7 +136,7 @@ h1, h2 {
 		top: 0;
 		width: 100%;
 		height: 100%;
-		background: #3d82c785;
+		background: #1f005163;
 		z-index: 2
 	}
 
@@ -156,6 +156,24 @@ h1, h2 {
 
 			.tab-items {
 				overflow-y: auto;
+			}
+		}
+
+		.vue-swatches {
+			height: 100%;
+			display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    margin-right: 16px;
+
+			.vue-swatches__container {
+				right: auto!important;
+				position: fixed;
+				max-width: 80vw;
+			    height: auto;
+			    left: 50%;
+			    top: 50%;
+			    transform: translate(-50%, -50%);
 			}
 		}
 	}

@@ -26,12 +26,15 @@
             @bumpmapping="$refs.wonderland.setBumpmapping($event)"
             @bumpmappingLevel="$refs.wonderland.setBumpmappingLevel($event)"
             @lightDistance="$refs.wonderland.setLightDistance($event)"
+            @lightIntensity="$refs.wonderland.setLightIntensity($event)"
             @physicEnabled="$refs.wonderland.setPhysicsEnabled($event)"
             @matterObjectsFriction="$refs.wonderland.setMatterObjectsFriction($event)"
             @matterObjectsRestitution="$refs.wonderland.setMatterObjectsRestitution($event)"
             @gyroGravityEnabled="$refs.wonderland.gyroGravityEnabled = $event"
             @gravityX="$refs.wonderland.setGravityX($event)"
             @gravityY="$refs.wonderland.setGravityY($event)"
+            @lightAColor="$refs.wonderland.setLightColor(`A`, $event)"
+            @lightBColor="$refs.wonderland.setLightColor(`B`, $event)"
         />
     </v-app>
 </template>

@@ -33,6 +33,9 @@
                         @bumpmapping="$emit(`bumpmapping`, $event)"
                         @bumpmappingLevel="$emit(`bumpmappingLevel`, $event)"
                         @lightDistance="$emit(`lightDistance`, $event)"
+                        @lightIntensity="$emit(`lightIntensity`, $event)"
+                        @lightAColor="$emit(`lightAColor`, $event)"
+                        @lightBColor="$emit(`lightBColor`, $event)"
                      />
                   </v-card>
                </v-tab-item>

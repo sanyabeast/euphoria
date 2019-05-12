@@ -37,7 +37,7 @@
     	<v-subheader>Источники света</v-subheader>
 
 	    <v-card flat color="transparent">
-	    	<v-subheader>Высота источника света</v-subheader>
+	    	<v-subheader>Высота источников света</v-subheader>
   
 		    <v-card-text class="pt-0">
 		      <v-slider
@@ -45,24 +45,70 @@
 	          	thumb-label="always"
 	          	min="1"
 	          	max="2000"
-	          	@change="$event.preventDefault(); $emit(`lightDistance`, $event)"
+	          	@change="$emit(`lightDistance`, $event)"
 		      ></v-slider>
 		    </v-card-text>
     		
     	</v-card>
 
-    	<v-list-tile @click="$emit(`bumpmapping`, bumpmapping)">
-	      	<swatches
-		      	v-model="color"
-	
-		      	:colors="colors"
-	
-		      	row-length="6"
-		      	shapes="circles"
-		      	show-border
-		      	popover-to="left"
-		    ></swatches>
+    	<v-card flat color="transparent">
+	    	<v-subheader>Интенсивность источников света</v-subheader>
+  
+		    <v-card-text class="pt-0">
+		      <v-slider
+	          	v-model="lightIntensity"
+	          	thumb-label="always"
+	          	min="0"
+	          	step="0.1"
+	          	max="3"
+	          	@change="$emit(`lightIntensity`, $event)"
+		      ></v-slider>
+		    </v-card-text>
+    		
+    	</v-card>
+
+    	<v-list-tile>
+    		<v-list-tile-action>
+		        <swatches
+			      	v-model="lightAColor"
+			      	:colors="colors"
+			      	row-length="5"
+			      	shapes="circles"
+			      	show-border
+			      	popover-to="left"
+			      	@input="$emit(`lightAColor`, $event)"
+			    ></swatches>
+		    </v-list-tile-action>
+
+		    <v-list-tile-content>
+		      	<v-list-tile-title>Цвет источника #1</v-list-tile-title>
+		      	<v-list-tile-sub-title>Цвет источника #1</v-list-tile-sub-title>
+		    </v-list-tile-content>
+
+	      	
 	    </v-list-tile>
+
+	    <v-list-tile>
+    		<v-list-tile-action>
+		        <swatches
+			      	v-model="lightBColor"
+			      	:colors="colors"
+			      	row-length="5"
+			      	shapes="circles"
+			      	show-border
+			      	popover-to="left"
+			      	@input="$emit(`lightBColor`, $event)"
+			    ></swatches>
+		    </v-list-tile-action>
+
+		    <v-list-tile-content>
+		      	<v-list-tile-title>Цвет источника #2</v-list-tile-title>
+		      	<v-list-tile-sub-title>Цвет источника #2</v-list-tile-sub-title>
+		    </v-list-tile-content>
+
+	      	
+	    </v-list-tile>
+
 	 </v-list>
 	
 </template>
@@ -70,17 +116,29 @@
 <script type="text/javascript">
 	
 	import Swatches from 'vue-swatches'
+	import "vue-swatches/dist/vue-swatches.min.css"
 
 	export default {
 		data () {
 			return {
 				bumpmapping: true,
 				bumpmappingLevel: 10,
-				lightDistance: 300,
-				color: '#F64272',
-      			colors: ['#F64272', '#F6648B', '#F493A7', '#F891A6', '#FFCCD5', '']
+				lightDistance: 450,
+				lightAColor: '#F64272',
+				lightBColor: '#51e5db',
+				lightIntensity: 1,
+      			colors: [
+      				['#F64272', '#F6648B', '#F493A7', '#F891A6', '#FFCCD5' ],
+			        ['#8b5aff', '#a27bff', '#b99cff', '#d0bdff', '#e8deff' ],
+			        ['#51e5db', '#74ebe3', '#96f0ea', '#b9f5f1', '#dcfaf8' ],
+			        ['#98f642', '#90f665', '#b1f494', '#b0f891', '#dbffcc' ],
+			        ['#ffa51a', '#ffb748', '#ffc976', '#ffdba3', '#ffedd1' ]
+      			]
 			}
 		},
-		components: { Swatches }
+		components: { Swatches },
+		methods: {
+
+		}
 	}
 </script>

@@ -331,33 +331,35 @@ export default {
 
             let lightGroup = new THREE.Group()
 
-            let pointLightA = new THREE.PointLight( 0xff5ae2, 1, 100000 );
+            let pointLightA = new THREE.PointLight( 0xF64272, 1, 100000 );
             pointLightA.intensity = 1;
+            pointLightA.position.y = -250
 
-            let pointLightB = new THREE.PointLight( 0x52feff, 1, 100000 );
+            let pointLightB = new THREE.PointLight( 0x51e5db, 1, 100000 );
             pointLightB.intensity = 1;
+            pointLightB.position.y = 250
 
 
-            TweenMax.to( pointLightA, 6, {
-                intensity: 1.4,
-                repeat: -1,
-                yoyo: true,
-                ease: Back.easeInOut.config(1.3),
-            } )
+            // TweenMax.to( pointLightA, 6, {
+            //     intensity: 1.4,
+            //     repeat: -1,
+            //     yoyo: true,
+            //     ease: Back.easeInOut.config(1.3),
+            // } )
 
-            TweenMax.fromTo( pointLightA.position, 4, {
-                x: -500
+            TweenMax.fromTo( pointLightA.position, 3, {
+                x: -150
             }, {
-                x: 500,
+                x: 150,
                 repeat: -1,
                 yoyo: true,
                 ease: Back.easeInOut.config(1.3),
             } )
 
             TweenMax.fromTo( pointLightB.position, 5, {
-                y: -500
+                x: -150
             }, {
-                y: 500,
+                x: 150,
                 repeat: -1,
                 yoyo: true,
                 ease: Back.easeInOut.config(1.3),
@@ -409,6 +411,12 @@ export default {
         
             // run the renderer
         },
+        setLightColor ( lightId, color ) {
+            color = parseInt( color.substring(1), 16 )
+            modules[`pointLight${lightId}`].color.setHex(color)
+
+            this.renderFrame()
+        }, 
         setBumpmapping ( enabled ) {
             forEach ( modules.cards, ( card )=>{
                 if (enabled){
@@ -452,6 +460,11 @@ export default {
             modules.lightGroup.position.z = modules.camera.position.z * value
             this.renderFrame()
         }, 
+        setLightIntensity ( value ) {
+            modules.pointLightA.intensity = value
+            modules.pointLightB.intensity = value
+            this.renderFrame()
+        },  
         updateMatterPlanes () {
            
             if (!modules.matter.engine) return
@@ -519,7 +532,10 @@ export default {
                 modules.camera.position.y = modules.lightGroup.position.y = -height / 2
                 modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.lightGroup.position.z *= 0.300;
+                modules.lightGroup.position.z *= 0.450;
+
+                modules.pointLightA.position.y = -height / 2
+                modules.pointLightB.position.y = height / 2
 
                 modules.size.x = width
                 modules.size.y = height
