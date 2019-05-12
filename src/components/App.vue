@@ -64,7 +64,7 @@ export default {
         //     evt.preventDefault()
         // } )
 
-        if ( !this.$store.state.isHybridApp ) {
+        if ( !this.$store.state.isHybridApp && this.$store.state.mobileDevice ) {
             document.body.addEventListener( "click", ()=>{
                 screenfull.request()
             } )

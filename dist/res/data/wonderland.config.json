@@ -50,6 +50,14 @@
             "aspect": 1,
             "count": 1,
             "geometry": "ring"
+        },
+        "basketball": {
+            "texture": "res/pics/basketball.jpg",
+            "bumpmap": "res/pics/bumpmaps/basketball.jpg",
+            "segments": 48,
+            "aspect": 1,
+            "count": 1,
+            "geometry": "sphere"
         }
     }
 }

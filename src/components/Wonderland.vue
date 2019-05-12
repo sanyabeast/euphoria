@@ -150,11 +150,11 @@ export default {
                     let geometry
 
                     if ( data.geometry == "circle" ) {
-                        geometry = new THREE.RingBufferGeometry( height / 2, 16)
+                        geometry = new THREE.CircleBufferGeometry( height / 2,  data.segments || 32)
                     } else if (data.geometry == "ring") {
-                        geometry = new THREE.RingBufferGeometry( height / 3, height / 2, 16)
+                        geometry = new THREE.RingBufferGeometry( height / 3, height / 2, data.segments || 32)
                     } else if (data.geometry == "sphere"){
-                        geometry = new THREE.SphereBufferGeometry( height / 2, 16)
+                        geometry = new THREE.SphereBufferGeometry( (height / 2) * 0.85, data.segments || 32, data.segments || 32)
                     } else if (data.geometry == "box"){
                         geometry = new THREE.BoxBufferGeometry( height * 0.8, height * 0.8, height * 0.8)
                     } else {
@@ -193,7 +193,7 @@ export default {
                     
                     let matterBody
 
-                    if ( data.geometry == "circle" ) {
+                    if ( data.geometry == "circle" || data.geometry == "ring" || data.geometry == "sphere") {
                         matterBody = Bodies.circle(x, y, height / 2 );
                     } else {
                         matterBody = Bodies.rectangle(x, y, width, height );
@@ -264,7 +264,7 @@ export default {
 
             // Subscribe to a desired event
             manager.on('swipe', (e)=>{
-                if (!this.$store.state.isHybridApp){
+                if (!this.$store.state.isHybridApp && this.$store.state.mobileDevice){
                     screenfull.request()
                 }
 
