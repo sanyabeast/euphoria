@@ -36,7 +36,7 @@
 		    <v-card-text class="pt-0">
 		      	<v-slider
 	            	v-model="gravityX"
-	            	thumb-label="always"
+	            	thumb-label
 	            	min="-1"
 	            	step="0.1"
 	            	max="1"
@@ -52,7 +52,7 @@
 		    <v-card-text class="pt-0">
 		      	<v-slider
 	            	v-model="gravityY"
-	            	thumb-label="always"
+	            	thumb-label
 	            	min="-1"
 	            	step="0.1"
 	            	max="1"
@@ -70,7 +70,7 @@
 		    <v-card-text class="pt-0">
 		      	<v-slider
 	            	v-model="matterObjectsFriction"
-	            	thumb-label="always"
+	            	thumb-label
 	            	min="0.1"
 	            	step="0.1"
 	            	max="5"
@@ -86,7 +86,7 @@
 		    <v-card-text class="pt-0">
 		      	<v-slider
 	            	v-model="matterObjectsRestitution"
-	            	thumb-label="always"
+	            	thumb-label
 	            	min="0.05"
 	            	step="0.05"
 	            	max="0.95"

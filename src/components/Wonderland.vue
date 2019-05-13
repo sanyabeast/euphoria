@@ -69,6 +69,7 @@ const config = require("data/wonderland.config.json")
 
 const modules = {
     cards: [],
+    backgrounds: {},
     matter: {
         planes: {
 
@@ -116,7 +117,9 @@ export default {
         
         this.updateSize()
         this.setupMatterEngine()
+        this.$createBackgrounds()
         this.$addBackground()
+
         this.$addTestObject()
 
         this.setupGestures()
@@ -214,11 +217,48 @@ export default {
                 }
             } )
         },
+        $createBackgrounds () {
+            forEach( config.backgrounds, ( data, name )=>{
+                let vertShader = require( "raw-loader!shaders/bg.vert" ).default
+                let fragShader = require( `raw-loader!shaders/${data.shader}` ).default
+                // geometry.translate( height / 2, width / 2, 0 )
+
+                let material = new THREE.ShaderMaterial( {
+                    vertexShader: vertShader,
+                    fragmentShader: fragShader,
+                    transparent: true,
+                    uniforms: {
+                        resolution: {
+                            value: modules.size
+                        },
+                        time: {
+                            get value () {
+                                return modules.time.x
+                            }
+                        },
+                        gyro: {
+                            value: modules.gyro
+                        }
+                    }
+                } )
+
+                modules.backgrounds[ name ] = material
+            } )
+        },
+        setBackgroundShader ( name ) {
+
+            console.log(name)
+            let material = modules.backgrounds[ name ]
+
+            modules.bg.material = material
+
+            this.renderFrame()
+        },
         $addBackground () {
             let self = this
 
             let vertShader = require( "raw-loader!shaders/bg.vert" ).default
-            let fragShader = require( "raw-loader!shaders/bg.frag" ).default
+            let fragShader = require( "raw-loader!shaders/stars.frag" ).default
             // let fragShader = require( "raw-loader!shaders/helix.frag" ).default
 
             let geometry = new THREE.PlaneGeometry( 1, 1, 1)
@@ -245,6 +285,7 @@ export default {
 
 
             let bg = new THREE.Mesh ( geometry, material )
+            modules.bg = bg
 
             modules.scene.add(bg)
         },
@@ -264,7 +305,7 @@ export default {
 
             // Subscribe to a desired event
             manager.on('swipe', (e)=>{
-                if (!this.$store.state.isHybridApp && this.$store.state.mobileDevice){
+                if (!this.$store.state.isHybridApp && this.$store.state.mobileDevice && this.$store.state.browserName != "safari"){
                     screenfull.request()
                 }
 
@@ -291,8 +332,8 @@ export default {
                        return
                    }
 
-                   if (newGravityX > 1) newGravityX = 2
-                   if (newGravityY > 1) newGravityY = 2
+                   if (newGravityX > 1) newGravityX = 1
+                   if (newGravityY > 1) newGravityY = 1
 
                    modules.matter.engine.world.gravity.y = (newGravityX)
                    modules.matter.engine.world.gravity.x = (newGravityY)

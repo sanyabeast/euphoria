@@ -1,12 +1,20 @@
 html, body {
 	width: 100%;
 	height: 100%;
-	height: 100vh;
 	margin: 0;
 	overflow: hidden;
 	-ms-touch-action: manipulation;
 	touch-action: manipulation;
 	background-color: #000000;
+}
+
+body {
+	position: fixed;
+	left: 0;
+	top: 0;
+	left: 0;
+	top: 0;
+	object-fit: cover;
 }
 
 * {
@@ -22,11 +30,13 @@ h1, h2 {
 .euphoria {	
 	width: 100%;
 	height: 100%;
+	position: relative;
 	
 	.application--wrap {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		min-height: auto;
 	}
 
 	.wonderland {
@@ -137,8 +147,15 @@ h1, h2 {
 		top: 0;
 		width: 100%;
 		height: 100%;
-		background: #1f005163;
-		z-index: 2
+		// background: #1f005163;
+		/* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#c4278a+0,1c5b9e85+100 */
+		background: #c4278a47; /* Old browsers */
+		background: -moz-linear-gradient(top,  #c4278a47 0%, #1c5b9e85 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(top,  #c4278a47 0%,#1c5b9e85 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to bottom,  #c4278a47 0%,#1c5b9e85 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c4278a47', endColorstr='#1c5b9e85',GradientType=0 ); /* IE6-9 */
+
+		z-index: 2;
 	}
 
 	.settings-menu {
@@ -146,9 +163,21 @@ h1, h2 {
     	flex-direction: column;
 		width: 80%;
 		max-width: 600px;
-		height: 60%;
+		height: 75%;
 		min-height: 40%;
 		z-index: 3;
+
+		.v-tabs__wrapper {
+			overflow-x: auto;
+		}
+
+		.settings-actions {
+			flex-shrink: 0;
+
+			* {
+				flex-shrink: 0;
+			}
+		}
 
 		.window-content {
 			flex-grow: 1;
@@ -181,39 +210,39 @@ h1, h2 {
 
 }
 
-// ::-webkit-scrollbar {
-//   width: 5px;
-//   height: 5px;
-// }
-// ::-webkit-scrollbar-button {
-//   width: 0px;
-//   height: 0px;
-// }
-// ::-webkit-scrollbar-thumb {
-//   background: rgba(0, 0, 0, 0.14);
-//   border: 0px none #ffffff;
-//   border-radius: 50px;
-// }
-// ::-webkit-scrollbar-thumb:hover {
-//   background: rgba(0, 0, 0, 0.14);
-// }
-// ::-webkit-scrollbar-thumb:active {
-//   background: rgba(0, 0, 0, 0.14);
-// }
-// ::-webkit-scrollbar-track {
-//   background: rgba(0, 0, 0, 0.0);
-//   border: 0px none #ffffff;
-//   border-radius: 50px;
-// }
-// ::-webkit-scrollbar-track:hover {
-//   background:rgba(0, 0, 0, 0.0);
-// }
-// ::-webkit-scrollbar-track:active {
-//   background: rgba(0, 0, 0, 0.0);
-// }
-// ::-webkit-scrollbar-corner {
-//   background: transparent;
-// }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.14);
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.14);
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.14);
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.0);
+  border: 0px none #ffffff;
+  border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+  background:rgba(0, 0, 0, 0.0);
+}
+::-webkit-scrollbar-track:active {
+  background: rgba(0, 0, 0, 0.0);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 
 .pause-menu-fade-enter-active {
   animation: pause-menu-fade-in .35s;

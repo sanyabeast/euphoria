@@ -20,22 +20,31 @@
             @resume="onResumeClick"
         />
         
-        <Settings 
-            v-show="settingsShown"
-            @exit="onSettingsExit"
-            @bumpmapping="$refs.wonderland.setBumpmapping($event)"
-            @bumpmappingLevel="$refs.wonderland.setBumpmappingLevel($event)"
-            @lightDistance="$refs.wonderland.setLightDistance($event)"
-            @lightIntensity="$refs.wonderland.setLightIntensity($event)"
-            @physicEnabled="$refs.wonderland.setPhysicsEnabled($event)"
-            @matterObjectsFriction="$refs.wonderland.setMatterObjectsFriction($event)"
-            @matterObjectsRestitution="$refs.wonderland.setMatterObjectsRestitution($event)"
-            @gyroGravityEnabled="$refs.wonderland.setGyroGravityEnabled($event)"
-            @gravityX="$refs.wonderland.setGravityX($event)"
-            @gravityY="$refs.wonderland.setGravityY($event)"
-            @lightAColor="$refs.wonderland.setLightColor(`A`, $event)"
-            @lightBColor="$refs.wonderland.setLightColor(`B`, $event)"
-        />
+        <transition 
+            :css="false"
+            @enter="onSettingsEnter"
+            @leave="onSettingsLeave"
+        >
+            <Settings 
+                v-show="settingsShown"
+                ref="settingsMenu"
+                @exit="onSettingsExit"
+                @bumpmapping="$refs.wonderland.setBumpmapping($event)"
+                @bumpmappingLevel="$refs.wonderland.setBumpmappingLevel($event)"
+                @lightDistance="$refs.wonderland.setLightDistance($event)"
+                @lightIntensity="$refs.wonderland.setLightIntensity($event)"
+                @physicEnabled="$refs.wonderland.setPhysicsEnabled($event)"
+                @matterObjectsFriction="$refs.wonderland.setMatterObjectsFriction($event)"
+                @matterObjectsRestitution="$refs.wonderland.setMatterObjectsRestitution($event)"
+                @gyroGravityEnabled="$refs.wonderland.setGyroGravityEnabled($event)"
+                @gravityX="$refs.wonderland.setGravityX($event)"
+                @gravityY="$refs.wonderland.setGravityY($event)"
+                @lightAColor="$refs.wonderland.setLightColor(`A`, $event)"
+                @lightBColor="$refs.wonderland.setLightColor(`B`, $event)"
+                @backgroundShader="$refs.wonderland.setBackgroundShader($event)"
+                @backgroundEnabled="$refs.wonderland.modules.bg.visible = $event; $refs.wonderland.renderFrame()"
+            />
+        </transition>
     </v-app>
 </template>
 
@@ -64,7 +73,7 @@ export default {
         //     evt.preventDefault()
         // } )
 
-        if ( !this.$store.state.isHybridApp && this.$store.state.mobileDevice ) {
+        if ( !this.$store.state.isHybridApp && this.$store.state.mobileDevice && this.$store.state.browserName != "safari" ) {
             document.body.addEventListener( "click", ()=>{
                 screenfull.request()
             } )
@@ -74,6 +83,7 @@ export default {
             evt.stopPropagation()
             evt.preventDefault()
         } )
+
 
 		window.addEventListener( "android.key.back.pressed", ()=>{
             this.$store.dispatch( "native", {
@@ -105,6 +115,13 @@ export default {
             this.settingsShown = false
             this.pauseMenuShown = false
             this.$refs.wonderland.startRendering()
+        },
+        onSettingsEnter ( el, done ) {
+            this.$refs.settingsMenu.reset()
+            done()
+        },
+        onSettingsLeave ( el, done ) {
+            done()
         },
         onAppClick () {            
         }
