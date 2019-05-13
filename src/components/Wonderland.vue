@@ -45,6 +45,14 @@
         >
             <i class="material-icons">pause</i>
         </p>
+        <p 
+            class="mute-button"
+            @click="onMuteClick"
+        >
+            <i 
+                class="material-icons"
+            >{{ soundMuted ? `volume_muted` : `volume_up` }}</i>
+        </p>
     </div>
 </template>
 
@@ -55,6 +63,7 @@ import { forEach } from "lodash"
 import Hamer from "hammerjs"
 import { TweenMax } from "gsap/TweenMax"
 import screenfull from "screenfull"
+import SoundBlaster from "components/Wonderland/SoundBlaster"
 
 const Matter = require("matter-js")
 
@@ -77,7 +86,8 @@ const modules = {
     },
     size: new THREE.Vector2( 0, 0 ),
     time: new THREE.Vector2( 0, 0 ),
-    gyro: new THREE.Vector2( 0, 0 )
+    gyro: new THREE.Vector2( 0, 0 ),
+    soundBlaster: new SoundBlaster()
 }
 
 export default {
@@ -87,7 +97,9 @@ export default {
             prevRenderedFrameTime: +new Date(),
             physicEnabled: true,
             renderingActive: false,
-            gyroGravityEnabled: true
+            gyroGravityEnabled: true,
+            mainThemePlays: false,
+            soundMuted: false
         }
     },
     watch: {
@@ -135,6 +147,11 @@ export default {
         this.startRendering()
 
         this.$root.$on( "wonderland.render", ()=> this.startRendering() )
+
+        if ( this.$store.state.isHybridApp ) {
+            modules.soundBlaster.play( "main_theme", 0.333, true )
+            this.mainThemePlays = true
+        }
 
 	},
     methods: {
@@ -370,12 +387,12 @@ export default {
 
             let lightGroup = new THREE.Group()
 
-            let pointLightA = new THREE.PointLight( 0x8b5aff, 1, 100000 );
-            pointLightA.intensity = 1;
+            let pointLightA = new THREE.PointLight( 0xF64272, 1, 100000 );
+            pointLightA.intensity = 1.7;
             pointLightA.position.y = -250
 
-            let pointLightB = new THREE.PointLight( 0xffdba3, 1, 100000 );
-            pointLightB.intensity = 1;
+            let pointLightB = new THREE.PointLight( 0x51e5db, 1, 100000 );
+            pointLightB.intensity = 1.7;
             pointLightB.position.y = 250
 
 
@@ -576,7 +593,7 @@ export default {
                 modules.camera.position.y = modules.lightGroup.position.y = -height / 2
                 modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.lightGroup.position.z *= 0.450;
+                modules.lightGroup.position.z *= 0.300;
 
                 modules.pointLightA.position.y = -height / 2
                 modules.pointLightB.position.y = height / 2
@@ -648,10 +665,22 @@ export default {
                 modules.cards[a].rotation.z = -modules.cards[a].matterBody.angle
             }
         },
-        onPauseClick () {
+        onPauseClick ( evt ) {
+            evt.stopPropagation()
             this.$emit( "pauseClick" )
         },
+        onMuteClick ( evt ) {
+            evt.stopPropagation()
+            this.soundMuted = !this.soundMuted
+            modules.soundBlaster.mute( this.soundMuted )
+        },
         onRootClick ( evt ) {
+
+            if ( !this.mainThemePlays && !this.$store.state.isHybridApp ) {
+                modules.soundBlaster.play( "main_theme", 0.333, true )
+                this.mainThemePlays = true
+            }
+
             // try {
             //     document.body.webkitRequestFullscreen()
 

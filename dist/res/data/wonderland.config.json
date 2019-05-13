@@ -4,7 +4,7 @@
     "cameraFOV": 60,
     "maxVelocity": 400,
     "boxWallThickness": 1,
-    "bumpScale": 10,
+    "bumpScale": 6,
     "scaleLevels": [ 0.33, 0.66, 1, 1.444, 1.888 ],
     "backgrounds": {
         "stars": {
@@ -15,6 +15,12 @@
         },
         "rain": {
             "shader": "rain.frag"
+        },
+        "psycho": {
+            "shader": "psycho.frag"
+        },
+        "waves": {
+            "shader": "waves.frag"
         }
     },
     "cardTextures": {
@@ -32,7 +38,7 @@
         },
         "queen": {
             "texture": "res/pics/queen.png",
-            "bumpmap": "res/pics/bumpmaps/someth2.jpg",
+            "bumpmap": "res/pics/bumpmaps/paper.jpg",
             "aspect": 0.71,
             "count": 2
         },
@@ -41,12 +47,6 @@
             "bumpmap": "res/pics/bumpmaps/waves2.jpg",
             "aspect": 0.71,
             "count": 2
-        },
-        "paint": {
-            "texture": "res/pics/paint.png",
-            "bumpmap": "res/pics/bump_paint.png",
-            "aspect": 1,
-            "count": 1
         },
         "brick": {
             "texture": "res/pics/brick.png",

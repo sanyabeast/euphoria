@@ -56,8 +56,6 @@ import Settings from "components/Settings.vue"
 import Wonderland from "components/Wonderland.vue"
 import screenfull from "screenfull"
 
-console.log(screenfull)
-
 export default {
 	components: { Button, Wonderland, Pause, Settings },
     data () {
@@ -95,6 +93,8 @@ export default {
                 ]
             } )
         } )
+
+       
 
 	},
     methods: {

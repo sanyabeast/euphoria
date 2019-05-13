@@ -1,6 +1,6 @@
 {
     "name": "euphoria",
-    "version": "1.0.65",
+    "version": "1.0.66",
     "main": "index.js",
     "author": "sanyabeast <a.gvrnsk@gmail.com>",
     "license": "MIT",
@@ -32,6 +32,7 @@
         "gsap": "latest",
         "hammerjs": "latest",
         "hotkeys-js": "latest",
+        "howler": "^2.1.2",
         "html-webpack-plugin": "latest",
         "ip": "^1.1.5",
         "js-beautify": "next",
@@ -72,6 +73,7 @@
         "webpack-dev-server": "latest"
     },
     "dependencies": {
+        "latest": "^0.2.0",
         "vue-cli": "^2.9.6"
     }
 }

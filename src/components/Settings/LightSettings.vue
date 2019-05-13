@@ -122,11 +122,11 @@
 		data () {
 			return {
 				bumpmapping: true,
-				bumpmappingLevel: 10,
-				lightDistance: 450,
-				lightAColor: '#8b5aff',
-				lightBColor: '#ffdba3',
-				lightIntensity: 1,
+				bumpmappingLevel: 6,
+				lightDistance: 300,
+				lightAColor: '#F64272',
+				lightBColor: '#51e5db',
+				lightIntensity: 1.7,
       			colors: [
       				['#F64272', '#F6648B', '#F493A7', '#F891A6', '#FFCCD5' ],
 			        ['#8b5aff', '#a27bff', '#b99cff', '#d0bdff', '#e8deff' ],
