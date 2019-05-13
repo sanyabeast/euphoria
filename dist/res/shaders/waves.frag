@@ -22,9 +22,9 @@ void main()
     for(int i=1;i<2;i++)
     {
         vec2 newp=p;
-        float speed = 2.0 *(time * 10.); // speed control
-        newp.x+=0.6/float(i)*sin(float(i)*p.y+(time * 10.)/(100.0/speed)+0.3*float(i))+1.0;
-        newp.y+=0.6/float(i)*cos(float(i)*p.x+(time * 10.)/(100.0/speed)+0.3*float(i+10))-1.4;
+        float speed = 2.0 *(time * 1.); // speed control
+        newp.x+=0.6/float(i)*sin(float(i)*p.y+(time * 1.)/(100.0/speed)+0.3*float(i))+1.0;
+        newp.y+=0.6/float(i)*cos(float(i)*p.x+(time * 1.)/(100.0/speed)+0.3*float(i+10))-1.4;
         p=newp;
     }
     vec3 col=vec3(sin(p.x),0.,tan(p.x+p.y));

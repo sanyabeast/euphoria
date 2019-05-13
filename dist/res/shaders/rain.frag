@@ -35,7 +35,7 @@ void main(void)
 
   float v = 1.0 - sin(hash(floor(uv.x * 100.0)) * 2.0);
 
-  float b = clamp(abs(sin(20.0 * (time * 10.) *1.75 * v + uv.y * (5.0 / (2.0 + v)))) - 0.95, 0.0, 1.0) * 20.0;
+  float b = clamp(abs(sin(20.0 * (time) *1.75 * v + uv.y * (5.0 / (2.0 + v)))) - 0.95, 0.0, 1.0) * 20.0;
 
   c *= v * b;
 

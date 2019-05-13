@@ -38,32 +38,18 @@
                <v-tab-item key="0">
                   <v-card flat>
                      <LightSettings
-                        @bumpmapping="$emit(`bumpmapping`, $event)"
-                        @bumpmappingLevel="$emit(`bumpmappingLevel`, $event)"
-                        @lightDistance="$emit(`lightDistance`, $event)"
-                        @lightIntensity="$emit(`lightIntensity`, $event)"
-                        @lightAColor="$emit(`lightAColor`, $event)"
-                        @lightBColor="$emit(`lightBColor`, $event)"
                      />
                   </v-card>
                </v-tab-item>
                <v-tab-item key="1">
                   <v-card flat>
                      <SimSettings
-                        @physicEnabled="$emit(`physicEnabled`, $event)"
-                        @matterObjectsFriction="$emit(`matterObjectsFriction`, $event)"
-                        @matterObjectsRestitution="$emit(`matterObjectsRestitution`, $event)"
-                        @gyroGravityEnabled="$emit(`gyroGravityEnabled`, $event)"
-                        @gravityX="$emit(`gravityX`, $event)"
-                        @gravityY="$emit(`gravityY`, $event)"
                      />
                   </v-card>
                </v-tab-item>
                <v-tab-item key="2">
                     <v-card flat>
                         <ExtraSettings
-                            @backgroundShader="$emit(`backgroundShader`, $event)"
-                            @backgroundEnabled="$emit(`backgroundEnabled`, $event)"
                         />
                     </v-card>
                </v-tab-item>

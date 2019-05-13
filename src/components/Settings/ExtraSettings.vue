@@ -6,12 +6,12 @@
 	  >
 	    <v-subheader>Шейдер фона</v-subheader>
 
-	    <v-list-tile @click="$emit(`backgroundEnabled`, backgroundEnabled)">
+	    <v-list-tile>
 	      <v-list-tile-action>
-	        <v-checkbox v-model="backgroundEnabled"></v-checkbox>
+	        <v-checkbox v-model="$store.state.backgroundEnabled"></v-checkbox>
 	      </v-list-tile-action>
 
-	      <v-list-tile-content @click="backgroundEnabled = !backgroundEnabled">
+	      <v-list-tile-content @click="$store.state.backgroundEnabled = !$store.state.backgroundEnabled">
 	        <v-list-tile-title>Активно</v-list-tile-title>
 	        <v-list-tile-sub-title>Включить отключить фон</v-list-tile-sub-title>
 	      </v-list-tile-content>
@@ -20,10 +20,9 @@
 	    <v-list-tile>
 	      <v-list-tile-action>
 	        <v-select
-		        v-model="backgroundShader"
+		        v-model="$store.state.backgroundShader"
 	            :items="backgroundShaders"
 	            label="Standard"
-	            @change="$emit(`backgroundShader`, backgroundShader)"
 	        ></v-select>
 	      </v-list-tile-action>
 	    </v-list-tile>
@@ -41,8 +40,6 @@
 	export default {
 		data () {
 			return {
-				backgroundShader: "stars",
-				backgroundEnabled: true,
 				backgroundShaders: map( config.backgrounds, ( el, name )=> name )
 			}
 		}

@@ -47,11 +47,11 @@
         </p>
         <p 
             class="mute-button"
-            @click="onMuteClick"
+            @click="$store.state.soundMuted = !$store.state.soundMuted;  this.checkFullscreen()"
         >
             <i 
                 class="material-icons"
-            >{{ soundMuted ? `volume_muted` : `volume_up` }}</i>
+            >{{ $store.state.soundMuted ? `volume_muted` : `volume_up` }}</i>
         </p>
     </div>
 </template>
@@ -64,6 +64,7 @@ import Hamer from "hammerjs"
 import { TweenMax } from "gsap/TweenMax"
 import screenfull from "screenfull"
 import SoundBlaster from "components/Wonderland/SoundBlaster"
+import { mapState } from 'vuex';
 
 const Matter = require("matter-js")
 
@@ -93,16 +94,117 @@ const modules = {
 export default {
     data () {
         return {
-            totalScore: 0,
             prevRenderedFrameTime: +new Date(),
-            physicEnabled: true,
-            renderingActive: false,
-            gyroGravityEnabled: true,
-            mainThemePlays: false,
-            soundMuted: false
         }
     },
+    computed: mapState([
+        "soundMuted",
+        "mainThemePlays",
+        "bumpmappingEnabled",
+        "bumpmappingLevel",
+        "lightsDistance",
+        "lightsIntensity",
+        "lightAColor",
+        "lightBColor",
+        "gyroGravityEnabled",
+        "physicEnabled",
+        "gravityX",
+        "gravityY",
+        "matterObjectsFriction",
+        "matterObjectsRestitution",
+        "matterObjectsFrictionAir",
+        "backgroundEnabled",
+        "backgroundShader",
+        "totalScore"
+    ]),
     watch: {
+        mainThemePlays ( plays ) {
+            if ( plays ) {
+                modules.soundBlaster.play( "main_theme", 0.333, true )
+            } else {
+                modules.soundBlaster.stop( "main_theme" )
+            }
+        },
+        soundMuted ( muted ) {
+            modules.soundBlaster.mute( muted )
+            this.$store.dispatch( "save" )
+        },
+        backgroundEnabled ( enabled ) {
+            modules.bg.visible = enabled
+        },
+        backgroundShader ( shader ) {
+            this.setBackgroundShader( shader )
+        },
+        matterObjectsFriction ( value ) {
+            forEach ( modules.cards, ( card )=>{
+                card.matterBody.friction = value
+            } )
+        },
+        matterObjectsFrictionAir ( value ) {
+            forEach ( modules.cards, ( card )=>{
+                card.matterBody.frictionAir = value
+            } )
+        },
+        matterObjectsRestitution ( value ) {
+            forEach ( modules.cards, ( card )=>{
+                card.matterBody.restitution = value
+            } )
+        },
+        gravityX ( value ) {
+            // this.$store.state.gyroGravityEnabled = false
+            modules.matter.engine.world.gravity.x = value
+        },
+        gravityY ( value ) {
+            // this.$store.state.gyroGravityEnabled = false
+            modules.matter.engine.world.gravity.y = value
+        },
+        physicEnabled ( enabled ) {
+            this.prevRenderedFrameTime = +new Date()
+        },
+        gyroGravityEnabled ( enabled ) {
+            if ( !enabled ) {
+                this.$store.state.gravityX = 0
+                this.$store.state.gravityY = 0
+            }
+        },
+        lightAColor ( color ) {
+            this.setLightColor( "A", color )
+        },
+        lightBColor ( color ) {
+            this.setLightColor( "B", color )
+        },
+        lightsIntensity ( value ) {
+            modules.pointLightA.intensity = value
+            modules.pointLightB.intensity = value
+            this.renderFrame()
+        },
+        lightsDistance ( value ) {
+            value /= 1000
+            modules.lightGroup.position.z = modules.camera.position.z * value
+            this.renderFrame()
+        },
+        bumpmappingLevel ( value ) {
+            forEach ( modules.cards, ( card )=>{
+                card.material.bumpScale = value
+                card.material.needsUpdate = true;
+            } )
+
+            this.renderFrame()
+        },
+        bumpmappingEnabled ( enabled ) {
+            forEach ( modules.cards, ( card )=>{
+                if (enabled){
+                    card.material.bumpMap = card.material.bumpMap || card.$bumpMap
+                } else {
+                    card.$bumpMap = card.$bumpMap || card.material.bumpMap
+                    card.material.bumpMap = null
+                }
+
+                card.material.needsUpdate = true;
+            } )
+
+            this.renderFrame()
+        },
         totalScore: function(){
             if ( this.scoreTween ) {
                 this.scoreTween.kill()
@@ -149,9 +251,10 @@ export default {
         this.$root.$on( "wonderland.render", ()=> this.startRendering() )
 
         if ( this.$store.state.isHybridApp ) {
-            modules.soundBlaster.play( "main_theme", 0.333, true )
-            this.mainThemePlays = true
+            this.$store.state.mainThemePlays = true
         }
+
+        modules.soundBlaster.mute( this.$store.state.soundMuted )
 
 	},
     methods: {
@@ -161,7 +264,7 @@ export default {
                 let bumpMap = new THREE.TextureLoader().load( data.bumpmap );
 
                 for ( let a = 0; a < data.count; a++ ) {
-                    let height = (Math.min(modules.size.x, modules.size.y) / ( 3 + ( Math.floor( Math.random() * 4 ) ) ) )
+                    let height = (Math.min(modules.size.x, modules.size.y) / ( 4 + ( Math.floor( Math.random() * 4 ) ) ) )
                     let width = height * data.aspect
 
                     let x = modules.size.x / 2
@@ -224,9 +327,9 @@ export default {
 
                     Matter.Body.setMass( matterBody, data.mass || Math.pow( width, 1 ) )
 
-                    matterBody.friction = 0.01;
-                    matterBody.frictionAir = 0.02;
-                    matterBody.restitution = 0.1;
+                    matterBody.friction = this.$store.state.matterObjectsFriction;
+                    matterBody.frictionAir = this.$store.state.matterObjectsFrictionAir;
+                    matterBody.restitution = this.$store.state.matterObjectsRestitution;
 
                     card.matterBody = matterBody
 
@@ -263,12 +366,10 @@ export default {
             } )
         },
         setBackgroundShader ( name ) {
+            if ( !modules.backgrounds[ name ] ) name = "stars"
 
-            console.log(name)
             let material = modules.backgrounds[ name ]
-
             modules.bg.material = material
-
             this.renderFrame()
         },
         $addBackground () {
@@ -281,28 +382,10 @@ export default {
             let geometry = new THREE.PlaneGeometry( 1, 1, 1)
             // geometry.translate( height / 2, width / 2, 0 )
 
-            let material = new THREE.ShaderMaterial( {
-                vertexShader: vertShader,
-                fragmentShader: fragShader,
-                transparent: true,
-                uniforms: {
-                    resolution: {
-                        value: modules.size
-                    },
-                    time: {
-                        get value () {
-                            return modules.time.x
-                        }
-                    },
-                    gyro: {
-                        value: modules.gyro
-                    }
-                }
-            } )
-
-
-            let bg = new THREE.Mesh ( geometry, material )
+            let bg = new THREE.Mesh ( geometry )
             modules.bg = bg
+
+            this.setBackgroundShader( this.$store.state.backgroundShader )
 
             modules.scene.add(bg)
         },
@@ -322,14 +405,21 @@ export default {
 
             // Subscribe to a desired event
             manager.on('swipe', (e)=>{
-                if (!this.$store.state.isHybridApp && this.$store.state.mobileDevice && this.$store.state.browserName != "safari"){
-                    screenfull.request()
+                this.checkFullscreen()
+
+                if ( !this.mainThemePlays && !this.$store.state.isHybridApp ) {
+                    this.$store.state.mainThemePlays = true
                 }
 
                 e.preventDefault()
                 this.setVelocity( e.overallVelocityX * config.velocityMultiplier * window.devicePixelRatio, e.overallVelocityY * config.velocityMultiplier * window.devicePixelRatio )
             });
 
+        },
+        checkFullscreen () {
+            if (!this.$store.state.isHybridApp && this.$store.state.mobileDevice && this.$store.state.browserName != "safari"){
+                screenfull.request()
+            }
         },
         setupGyro () {
             window.addEventListener('deviceorientation', ( event )=> {
@@ -352,8 +442,8 @@ export default {
                    if (newGravityX > 1) newGravityX = 1
                    if (newGravityY > 1) newGravityY = 1
 
-                   modules.matter.engine.world.gravity.y = (newGravityX)
-                   modules.matter.engine.world.gravity.x = (newGravityY)
+                   modules.matter.engine.world.gravity.x = (newGravityX)
+                   modules.matter.engine.world.gravity.y = -(newGravityY)
 
                    this.$refs.gravityX.textContent = newGravityX.toFixed(2)
                    this.$refs.gravityY.textContent = newGravityY.toFixed(2)
@@ -435,9 +525,13 @@ export default {
             modules.pointLightA = pointLightA
             modules.pointLightB = pointLightB
 
+            this.setLightColor( "A", this.$store.state.lightAColor )
+            this.setLightColor( "B", this.$store.state.lightBColor )
+
+
             setInterval( ()=>{
-                modules.time.x += 0.001
-                modules.time.x = modules.time.x % 1000
+                modules.time.x += 0.01
+                modules.time.x = modules.time.x % 10
             }, 1000 / 30 )
         },
         setupMatterEngine () {
@@ -461,8 +555,8 @@ export default {
             // run the engine
             modules.matter.engine = engine
 
-            modules.matter.engine.world.gravity.y = (0)
-            modules.matter.engine.world.gravity.x = (0)
+            modules.matter.engine.world.gravity.x = this.$store.state.gravityX
+            modules.matter.engine.world.gravity.y = this.$store.state.gravityY
             // modules.matter.render = render
         
             // run the renderer
@@ -473,60 +567,6 @@ export default {
 
             this.renderFrame()
         }, 
-        setGyroGravityEnabled ( enabled ) {
-            this.gyroGravityEnabled = enabled
-
-            if ( !enabled ) {
-                modules.matter.engine.world.gravity.x = 0
-                modules.matter.engine.world.gravity.y = 0
-            }
-        },
-        setBumpmapping ( enabled ) {
-            forEach ( modules.cards, ( card )=>{
-                if (enabled){
-                    card.material.bumpMap = card.material.bumpMap || card.$bumpMap
-                } else {
-                    card.$bumpMap = card.$bumpMap || card.material.bumpMap
-                    card.material.bumpMap = null
-                }
-
-                card.material.needsUpdate = true;
-            } )
-
-            this.renderFrame()
-        },  
-        setMatterObjectsFriction ( value ) {
-
-            forEach ( modules.cards, ( card )=>{
-                card.matterBody.friction = value
-            } )
-
-        },
-        setMatterObjectsRestitution ( value ) {
-
-            forEach ( modules.cards, ( card )=>{
-                card.matterBody.restitution = value
-            } )
-
-        },
-        setBumpmappingLevel ( bumpScale ) {
-            forEach ( modules.cards, ( card )=>{
-                card.material.bumpScale = bumpScale
-                card.material.needsUpdate = true;
-            } )
-
-            this.renderFrame()
-        },  
-        setLightDistance ( value ) {
-            value /= 1000
-            modules.lightGroup.position.z = modules.camera.position.z * value
-            this.renderFrame()
-        }, 
-        setLightIntensity ( value ) {
-            modules.pointLightA.intensity = value
-            modules.pointLightB.intensity = value
-            this.renderFrame()
-        },  
         updateMatterPlanes () {
            
             if (!modules.matter.engine) return
@@ -593,7 +633,7 @@ export default {
                 modules.camera.position.y = modules.lightGroup.position.y = -height / 2
                 modules.camera.position.z = modules.lightGroup.position.z = ( ( Math.sqrt( 3 ) / 2 ) * height )
 
-                modules.lightGroup.position.z *= 0.300;
+                modules.lightGroup.position.z *= ( this.$store.state.lightsDistance / 1000 );
 
                 modules.pointLightA.position.y = -height / 2
                 modules.pointLightB.position.y = height / 2
@@ -622,12 +662,6 @@ export default {
                 Matter.Body.setVelocity( card.matterBody, { x: x, y: y });
             } )
         },
-        setGravityX ( value ) {
-           modules.matter.engine.world.gravity.x = value
-        },
-        setGravityY ( value ) {
-           modules.matter.engine.world.gravity.y = value
-        },
         updateThings ( delta ) {
             
             if ( this.physicEnabled ) {
@@ -647,22 +681,22 @@ export default {
                 // });
 
                 if (modules.cards[a].matterBody.position.x > modules.size.x * 2) {
-                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
-                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
+                    this.$store.state.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
+                    this.$store.state.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
 
                     Matter.Body.setPosition( modules.cards[a].matterBody, { x: 0, y: 0 } )
                 }
 
                 if (modules.cards[a].matterBody.position.x > modules.size.y * 2) {
-                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
-                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
+                    this.$store.state.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
+                    this.$store.state.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
 
                     Matter.Body.setPosition( modules.cards[a].matterBody, { x: 0, y: 0 } )
                 }
 
                 if (modules.cards[a].matterBody.position.x < -modules.size.x ) {
-                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
-                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
+                    this.$store.state.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
+                    this.$store.state.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
                     Matter.Body.setPosition( modules.cards[a].matterBody, { x: modules.size.x, y: 0 } )
                 }
 
@@ -673,19 +707,14 @@ export default {
             }
         },
         onPauseClick ( evt ) {
+             this.checkFullscreen()
             evt.stopPropagation()
             this.$emit( "pauseClick" )
-        },
-        onMuteClick ( evt ) {
-            evt.stopPropagation()
-            this.soundMuted = !this.soundMuted
-            modules.soundBlaster.mute( this.soundMuted )
         },
         onRootClick ( evt ) {
 
             if ( !this.mainThemePlays && !this.$store.state.isHybridApp ) {
-                modules.soundBlaster.play( "main_theme", 0.333, true )
-                this.mainThemePlays = true
+                this.$store.state.mainThemePlays = true
             }
 
             // try {
@@ -754,10 +783,6 @@ export default {
                 // } )
             }
 
-        },
-        setPhysicsEnabled ( enabled ) {
-            this.prevRenderedFrameTime = +new Date()
-            this.physicEnabled = enabled
         },
         detectIntersection ( x, y ) {
 

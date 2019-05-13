@@ -22,12 +22,12 @@ void main( void ) {
   
   float dq = length(q);
   float dr = length(r);
-  float w1 = sin((time * 40.)*1.5 + 5.0 * dq * 3.141592) * 1. ;
-  float w2 = cos(8.2 * dr * 3.141592*sin(dq*33. - dr*w1*1.3 + w1*dp*3. + (time * 40.)*1.1)+(time * 40.)*4.) * 1. ;
+  float w1 = sin((time * 4.)*1.5 + 5.0 * dq * 3.141592) * 1. ;
+  float w2 = cos(8.2 * dr * 3.141592*sin(dq*33. - dr*w1*1.3 + w1*dp*3. + (time * 4.)*1.1)+(time * 4.)*4.) * 1. ;
   
-  color = w1*dr - w2*dq + dp*dr*sin((time * 40.))*5.;
+  color = w1*dr - w2*dq + dp*dr*sin((time * 4.))*5.;
 
-  //gl_FragColor = vec4( vec3( -color*color*color*2., abs(color) * 0.5, sin( color + (time * 40.) / 3.0 ) * 0.75 ), 1.0 );
+  //gl_FragColor = vec4( vec3( -color*color*color*2., abs(color) * 0.5, sin( color + (time * 4.) / 3.0 ) * 0.75 ), 1.0 );
   
   vec3 c;
   

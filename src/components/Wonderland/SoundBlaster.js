@@ -26,7 +26,11 @@ class SoundBlaster {
 		this.sounds[ name ].volume( volume || 0.333 )
 		this.sounds[ name ].loop( loop || false )
 		this.sounds[ name ].play()
-	}
+	} 
+
+	stop ( name ) {
+		this.sounds[ name ].stop()
+	}	 	
 
 	mute ( muted ) {
 		this.Howler.mute( muted )

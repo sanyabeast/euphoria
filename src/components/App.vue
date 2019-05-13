@@ -29,20 +29,6 @@
                 v-show="settingsShown"
                 ref="settingsMenu"
                 @exit="onSettingsExit"
-                @bumpmapping="$refs.wonderland.setBumpmapping($event)"
-                @bumpmappingLevel="$refs.wonderland.setBumpmappingLevel($event)"
-                @lightDistance="$refs.wonderland.setLightDistance($event)"
-                @lightIntensity="$refs.wonderland.setLightIntensity($event)"
-                @physicEnabled="$refs.wonderland.setPhysicsEnabled($event)"
-                @matterObjectsFriction="$refs.wonderland.setMatterObjectsFriction($event)"
-                @matterObjectsRestitution="$refs.wonderland.setMatterObjectsRestitution($event)"
-                @gyroGravityEnabled="$refs.wonderland.setGyroGravityEnabled($event)"
-                @gravityX="$refs.wonderland.setGravityX($event)"
-                @gravityY="$refs.wonderland.setGravityY($event)"
-                @lightAColor="$refs.wonderland.setLightColor(`A`, $event)"
-                @lightBColor="$refs.wonderland.setLightColor(`B`, $event)"
-                @backgroundShader="$refs.wonderland.setBackgroundShader($event)"
-                @backgroundEnabled="$refs.wonderland.modules.bg.visible = $event; $refs.wonderland.renderFrame()"
             />
         </transition>
     </v-app>
@@ -65,7 +51,7 @@ export default {
         }
     },
 	mounted () {
-
+        this.$store.dispatch( "load" )
         // document.body.addEventListener( "touchstart", ( evt )=>{
         //     evt.stopPropagation()
         //     evt.preventDefault()
@@ -112,6 +98,7 @@ export default {
             this.settingsShown = true;
         },
         onSettingsExit () {
+            this.$store.dispatch( "save" )
             this.settingsShown = false
             this.pauseMenuShown = false
             this.$refs.wonderland.startRendering()

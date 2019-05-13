@@ -6,12 +6,12 @@
 	  >
 	    <v-subheader>Настройки физической симуляции</v-subheader>
 
-	    <v-list-tile @click="$emit(`physicEnabled`, physicEnabled)">
+	    <v-list-tile>
 	      <v-list-tile-action>
-	        <v-checkbox v-model="physicEnabled"></v-checkbox>
+	        <v-checkbox v-model="$store.state.physicEnabled"></v-checkbox>
 	      </v-list-tile-action>
 
-	      <v-list-tile-content @click="physicEnabled = !physicEnabled">
+	      <v-list-tile-content @click="$store.state.physicEnabled = !$store.state.physicEnabled">
 	        <v-list-tile-title>Активно</v-list-tile-title>
 	        <v-list-tile-sub-title>Включить отключить физику</v-list-tile-sub-title>
 	      </v-list-tile-content>
@@ -19,12 +19,12 @@
 
 	    <v-subheader>Настройки гравитации</v-subheader>
 
-	    <v-list-tile @click="$emit(`gyroGravityEnabled`, gyroGravityEnabled)">
+	    <v-list-tile>
 	      <v-list-tile-action>
-	        <v-checkbox v-model="gyroGravityEnabled"></v-checkbox>
+	        <v-checkbox v-model="$store.state.gyroGravityEnabled"></v-checkbox>
 	      </v-list-tile-action>
 
-	      <v-list-tile-content @click="gyroGravityEnabled = !gyroGravityEnabled">
+	      <v-list-tile-content @click="$store.state.gyroGravityEnabled = !$store.state.gyroGravityEnabled">
 	        <v-list-tile-title>Гирометр (Android)</v-list-tile-title>
 	        <v-list-tile-sub-title>Управлять гравитацией гирометром</v-list-tile-sub-title>
 	      </v-list-tile-content>
@@ -35,12 +35,11 @@
   
 		    <v-card-text class="pt-0">
 		      	<v-slider
-	            	v-model="gravityX"
+	            	v-model="$store.state.gravityX"
 	            	thumb-label="always"
 	            	min="-1"
 	            	step="0.1"
 	            	max="1"
-	            	@change=" gyroGravityEnabled = false; $emit(`gravityX`, $event)"
 		        ></v-slider>
 		    </v-card-text>
     		
@@ -51,12 +50,11 @@
   
 		    <v-card-text class="pt-0">
 		      	<v-slider
-	            	v-model="gravityY"
+	            	v-model="$store.state.gravityY"
 	            	thumb-label="always"
 	            	min="-1"
-	            	step="0.1"
+	            	step="0"
 	            	max="1"
-	            	@change=" gyroGravityEnabled = false; $emit(`gravityY`, $event)"
 		        ></v-slider>
 		    </v-card-text>
     		
@@ -69,12 +67,26 @@
   
 		    <v-card-text class="pt-0">
 		      	<v-slider
-	            	v-model="matterObjectsFriction"
+	            	v-model="$store.state.matterObjectsFriction"
 	            	thumb-label="always"
-	            	min="0.1"
-	            	step="0.1"
-	            	max="5"
-	            	@change="$emit(`matterObjectsFriction`, $event)"
+	            	min="0"
+	            	step="0.01"
+	            	max="1"
+		        ></v-slider>
+		    </v-card-text>
+    		
+    	</v-card>
+
+    	 <v-card flat color="transparent">
+	    	<v-subheader>Трение воздуха</v-subheader>
+  
+		    <v-card-text class="pt-0">
+		      	<v-slider
+	            	v-model="$store.state.matterObjectsFrictionAir"
+	            	thumb-label="always"
+	            	min="0"
+	            	step="0.01"
+	            	max="1"
 		        ></v-slider>
 		    </v-card-text>
     		
@@ -85,12 +97,11 @@
   
 		    <v-card-text class="pt-0">
 		      	<v-slider
-	            	v-model="matterObjectsRestitution"
+	            	v-model="$store.state.matterObjectsRestitution"
 	            	thumb-label="always"
 	            	min="0.05"
 	            	step="0.05"
 	            	max="0.95"
-	            	@change="$emit(`matterObjectsRestitution`, $event)"
 		        ></v-slider>
 		    </v-card-text>
     		
@@ -106,12 +117,7 @@
 	export default {
 		data () {
 			return {
-				physicEnabled: true,
-				matterObjectsFriction: 0.1,
-				matterObjectsRestitution: 0.05,
-				gyroGravityEnabled: true,
-				gravityX: 0,
-				gravityY: 0
+
 			}
 		}
 	}
