@@ -40,6 +40,7 @@
 	            	min="-1"
 	            	step="0.1"
 	            	max="1"
+	            	:disabled="$store.state.gyroGravityEnabled"
 		        ></v-slider>
 		    </v-card-text>
     		
@@ -53,8 +54,9 @@
 	            	v-model="$store.state.gravityY"
 	            	thumb-label="always"
 	            	min="-1"
-	            	step="0"
+	            	step="0.01"
 	            	max="1"
+	            	:disabled="$store.state.gyroGravityEnabled"
 		        ></v-slider>
 		    </v-card-text>
     		

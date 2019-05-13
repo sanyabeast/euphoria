@@ -100,9 +100,13 @@ export default {
         "matterObjectsFrictionAir",
         "backgroundEnabled",
         "backgroundShader",
-        "totalScore"
+        "totalScore",
+        "shadowsEnabled"
     ]),
     watch: {
+        shadowsEnabled ( enabled ) {
+            this.setShadowsEnabled( enabled )
+        },
         mainThemePlays ( plays ) {
             if ( plays ) {
                 modules.soundBlaster.play( "main_theme", 0.333, true )
@@ -239,6 +243,7 @@ export default {
             this.$store.state.mainThemePlays = true
         }
 
+        this.setShadowsEnabled( this.$store.state.shadowsEnabled )
         modules.soundBlaster.mute( this.$store.state.soundMuted )
 
 	},
@@ -274,6 +279,8 @@ export default {
                         color: 0xffffff, 
                         map: texture, 
                         transparent: true,
+                        // side: THREE.DoubleSide,
+                        depthTest: false
                     })
 
                     material.transparent = true
@@ -357,6 +364,57 @@ export default {
             modules.bg.material = material
             this.renderFrame()
         },
+        setShadowsEnabled ( enabled ) {
+            let renderer = modules.renderer
+            let lightA = modules.pointLightA
+            let lightB = modules.pointLightB
+            let scene = modules.scene
+            let shadowBg = modules.shadowBg
+
+            if ( enabled ) {
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+
+                //Create a PointLight and turn on shadows for the light
+                lightA.castShadow = true;            // default false
+                // lightB.castShadow = true;            // default false
+
+                //Set up shadow properties for the light
+                lightA.shadow.mapSize.width = 512;  // default
+                lightA.shadow.mapSize.height = 512; // default
+                lightA.shadow.camera.near = 0.01;       // default
+                lightA.shadow.camera.far = 10000      // default
+
+                lightB.shadow.mapSize.width = 512;  // default
+                lightB.shadow.mapSize.height = 512; // default
+                lightB.shadow.camera.near = 0.01;       // default
+                lightB.shadow.camera.far = 10000      // default
+
+                //Create a sphere that cast shadows (but does not receive them)
+                // var sphereGeometry = new THREE.SphereBufferGeometry( 5, 32, 32 );
+                // var sphereMaterial = new THREE.MeshStandardMaterial( { color: 0xff0000 } );
+                // var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+                // sphere.castShadow = true; //default is false
+                // sphere.receiveShadow = false; //default
+                // scene.add( sphere );
+
+                forEach( modules.cards, ( card )=>{
+                    card.castShadow = true
+                    card.receiveShadow = false
+                } )
+
+                //Create a plane that receives shadows (but does not cast them)
+                // var planeGeometry = new THREE.PlaneBufferGeometry( 20, 20, 32, 32 );
+                // var planeMaterial = new THREE.MeshStandardMaterial( { color: 0x00ff00 } )
+                // var plane = new THREE.Mesh( planeGeometry, planeMaterial );
+                shadowBg.receiveShadow = true;
+                // scene.add( plane );
+
+                //Create a helper for the shadow camera (optional)
+            } else {
+
+            }
+        },
         $addBackground () {
             let self = this
 
@@ -373,6 +431,19 @@ export default {
             this.setBackgroundShader( this.$store.state.backgroundShader )
 
             modules.scene.add(bg)
+
+            // let shadowBg = new THREE.Mesh( geometry, new THREE.MeshStandardMaterial( {
+            //     // color: 0xffffff,
+            //     transparent: true
+            // } ) )
+
+            // shadowBg.scale.set(10000, 10000, 10000)
+            // shadowBg.position.z = -100
+            // // shadowBg.position.set(5000, 5000, 5000)
+
+            // modules.shadowBg = shadowBg
+
+            // modules.scene.add( shadowBg )
         },
         setupGestures () {
             // Create an instance of Hammer with the reference.
@@ -410,8 +481,10 @@ export default {
                    let beta  = Math.floor(event.beta)
                    let gamma = Math.floor(event.gamma)
 
-                   let newGravityX = beta * config.gravityMultiplier
-                   let newGravityY = gamma * config.gravityMultiplier
+                   let newGravityX = gamma * config.gravityMultiplier
+                   let newGravityY = beta * config.gravityMultiplier
+
+                   // console.log(alpha, beta, gamma)
 
                    modules.gyro.set( newGravityX, newGravityY  )
 
@@ -422,8 +495,15 @@ export default {
                    if (newGravityX > 1) newGravityX = 1
                    if (newGravityY > 1) newGravityY = 1
 
+                   if (newGravityX < -1) newGravityX = -1
+                   if (newGravityY < -1) newGravityY = -1
+
                    modules.matter.engine.world.gravity.x = (newGravityX)
-                   modules.matter.engine.world.gravity.y = -(newGravityY)
+                   modules.matter.engine.world.gravity.y = (newGravityY)
+                   // this.$store.state.gravityX = (newGravityX)
+                   // this.$store.state.gravityY = (newGravityY)
+
+
 
                    this.$refs.gravityX.textContent = newGravityX.toFixed(2)
                    this.$refs.gravityY.textContent = newGravityY.toFixed(2)
@@ -449,7 +529,7 @@ export default {
 
 
             let scene = new THREE.Scene()
-            let camera = new THREE.PerspectiveCamera( config.cameraFOV, window.innerWidth / window.innerHeight, 0.1, 10000 )
+            let camera = new THREE.PerspectiveCamera( config.cameraFOV, window.innerWidth / window.innerHeight, 0.001, 100000 )
             let renderer = new THREE.WebGLRenderer({ 
                 antialias: false, 
                 canvas: canvasElement,

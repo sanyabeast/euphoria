@@ -10,6 +10,10 @@
             ref="wonderland"
         ></Wonderland>
 
+        <Tokens
+
+        />
+
         <div class="overlay"
             v-if="pauseMenuShown || settingsMenuShown"
         ></div>
@@ -56,10 +60,11 @@ import Button from "components/Button.vue"
 import Pause from "components/Pause.vue"
 import Settings from "components/Settings.vue"
 import Wonderland from "components/Wonderland.vue"
+import Tokens from "components/Tokens.vue"
 import { mapState } from 'vuex';
 
 export default {
-	components: { Button, Wonderland, Pause, Settings },
+	components: { Button, Wonderland, Tokens, Pause, Settings },
     data () {
         return {
 

@@ -87,12 +87,39 @@ h1, h2 {
 	    }
 	}
 
+	.tokens {
+		display: flex;
+		flex-direction: row;
+		position: absolute;
+		bottom: 56px;
+		left: 0;
+		z-index: 2;
+		left: 26px;
+		align-items: center;
+
+		i {
+			color: #cacaca;
+			font-size: 20px;
+			margin: 0 4px;
+		}
+
+		.separator {
+			width: 4px;
+			height: 4px;
+			border-radius: 50%;
+			background: #cacaca;
+			margin: 0 4px;
+		}
+	}
+
+
 	.wonderland {
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		left: 0;
 		top: 0;
+
 
 		canvas {
 			width: 100%!important;
@@ -114,14 +141,15 @@ h1, h2 {
 			display: flex;
 			flex-direction: row;
 			z-index: 3;
-			justify-content: space-around;
+			justify-content: flex-start;
+			padding-left: 30px;
 
 			p {
 				color: #fff;
 				font-size: 20px;
     			font-weight: 800;
-    			width: 25%;
     			text-align: center;
+    			margin-right: 32px;
 
     			&.gravity-x {
     				color: #8bc34a;

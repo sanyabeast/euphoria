@@ -7,6 +7,7 @@ import wlConfig from "data/wonderland.config.json"
 const browser = Bowser.getParser(window.navigator.userAgent);
 const device = new Device()
 
+console.log(device)
 
 var state = {
 	savedProps: [
@@ -33,7 +34,7 @@ var state = {
 		lightsIntensity: 1.6,
 		lightAColor: '#F64272',
 		lightBColor: '#51e5db',
-		gyroGravityEnabled: true,
+		gyroGravityEnabled: device.android,
 		physicEnabled: true,
 		matterObjectsFriction: 0.01,
 		matterObjectsRestitution: 0.01,
@@ -72,7 +73,7 @@ var state = {
 	],
 	lightAColor: '#F64272',
 	lightBColor: '#51e5db',
-	gyroGravityEnabled: true,
+	gyroGravityEnabled: device.android,
 	physicEnabled: true,
 	gravityX: 0,
 	gravityY: 0,
@@ -82,7 +83,8 @@ var state = {
 	backgroundEnabled: true,
 	backgroundShader: "stars",
 	pauseMenuShown: false,
-	settingsMenuShown: false
+	settingsMenuShown: false,
+	shadowsEnabled: false
 };
 
 export default state;
