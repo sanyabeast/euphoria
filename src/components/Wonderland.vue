@@ -39,20 +39,6 @@
             >0.00</p>
             
         </div>
-        <p 
-            class="pause-button"
-            @click="onPauseClick"
-        >
-            <i class="material-icons">pause</i>
-        </p>
-        <p 
-            class="mute-button"
-            @click="$store.state.soundMuted = !$store.state.soundMuted;  this.checkFullscreen()"
-        >
-            <i 
-                class="material-icons"
-            >{{ $store.state.soundMuted ? `volume_muted` : `volume_up` }}</i>
-        </p>
     </div>
 </template>
 
@@ -62,7 +48,6 @@ import * as THREE from "three"
 import { forEach } from "lodash"
 import Hamer from "hammerjs"
 import { TweenMax } from "gsap/TweenMax"
-import screenfull from "screenfull"
 import SoundBlaster from "components/Wonderland/SoundBlaster"
 import { mapState } from 'vuex';
 
@@ -405,7 +390,7 @@ export default {
 
             // Subscribe to a desired event
             manager.on('swipe', (e)=>{
-                this.checkFullscreen()
+                this.$store.dispatch( "checkFullscreen" )
 
                 if ( !this.mainThemePlays && !this.$store.state.isHybridApp ) {
                     this.$store.state.mainThemePlays = true
@@ -415,11 +400,6 @@ export default {
                 this.setVelocity( e.overallVelocityX * config.velocityMultiplier * window.devicePixelRatio, e.overallVelocityY * config.velocityMultiplier * window.devicePixelRatio )
             });
 
-        },
-        checkFullscreen () {
-            if (!this.$store.state.isHybridApp && this.$store.state.mobileDevice && this.$store.state.browserName != "safari"){
-                screenfull.request()
-            }
         },
         setupGyro () {
             window.addEventListener('deviceorientation', ( event )=> {
@@ -707,7 +687,7 @@ export default {
             }
         },
         onPauseClick ( evt ) {
-             this.checkFullscreen()
+            this.$store.dispatch( "checkFullscreen" )
             evt.stopPropagation()
             this.$emit( "pauseClick" )
         },

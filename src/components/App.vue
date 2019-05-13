@@ -1,7 +1,7 @@
 <template>
     <v-app
         class="euphoria root"
-        v-bind:class="{ overlayActive: (pauseMenuShown || settingsShown) }"
+        v-bind:class="{ overlayActive: (pauseMenuShown || settingsMenuShown) }"
         :data-browser-name="$store.state.browserName"
         :data-mobile-device="$store.state.mobileDevice ? 1 : 0"
     >
@@ -11,8 +11,24 @@
         ></Wonderland>
 
         <div class="overlay"
-            v-if="pauseMenuShown || settingsShown"
+            v-if="pauseMenuShown || settingsMenuShown"
         ></div>
+
+        <p 
+            class="pause-button"
+            @click="onPauseClick"
+            v-if="!$store.state.pauseMenuShown && !$store.state.settingsMenuShown"
+        >
+            <i class="material-icons">pause</i>
+        </p>
+        <p 
+            class="mute-button"
+            @click="$store.state.soundMuted = !$store.state.soundMuted; $store.dispatch( `checkFullscreen` )"
+        >
+            <i 
+                class="material-icons"
+            >{{ $store.state.soundMuted ? `volume_muted` : `volume_up` }}</i>
+        </p>
 
         <Pause
             v-show="pauseMenuShown"
@@ -26,7 +42,7 @@
             @leave="onSettingsLeave"
         >
             <Settings 
-                v-show="settingsShown"
+                v-show="settingsMenuShown"
                 ref="settingsMenu"
                 @exit="onSettingsExit"
             />
@@ -40,16 +56,19 @@ import Button from "components/Button.vue"
 import Pause from "components/Pause.vue"
 import Settings from "components/Settings.vue"
 import Wonderland from "components/Wonderland.vue"
-import screenfull from "screenfull"
+import { mapState } from 'vuex';
 
 export default {
 	components: { Button, Wonderland, Pause, Settings },
     data () {
         return {
-            settingsShown: false,
-            pauseMenuShown: false
+
         }
     },
+    computed: mapState( [
+        "pauseMenuShown",
+        "settingsMenuShown"
+    ] ),
 	mounted () {
         this.$store.dispatch( "load" )
         // document.body.addEventListener( "touchstart", ( evt )=>{
@@ -59,7 +78,7 @@ export default {
 
         if ( !this.$store.state.isHybridApp && this.$store.state.mobileDevice && this.$store.state.browserName != "safari" ) {
             document.body.addEventListener( "click", ()=>{
-                screenfull.request()
+                this.$store.dispatch( "checkFullscreen" )
             } )
         }
 
@@ -87,20 +106,20 @@ export default {
         onPauseClick () {
             console.log(1)
             this.$refs.wonderland.stopRendering()
-            this.pauseMenuShown = true
+            this.$store.state.pauseMenuShown = true
         },
         onResumeClick () {
-            this.pauseMenuShown = false
+            this.$store.state.pauseMenuShown = false
             this.$refs.wonderland.startRendering()
         },  
         onShowSettings () {
-            this.pauseMenuShown = false;
-            this.settingsShown = true;
+            this.$store.state.pauseMenuShown = false;
+            this.$store.state.settingsMenuShown = true;
         },
         onSettingsExit () {
             this.$store.dispatch( "save" )
-            this.settingsShown = false
-            this.pauseMenuShown = false
+            this.$store.state.settingsMenuShown = false
+            this.$store.state.pauseMenuShown = false
             this.$refs.wonderland.startRendering()
         },
         onSettingsEnter ( el, done ) {

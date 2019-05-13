@@ -1,6 +1,7 @@
 import _ from "Helpers";
 import { forEach } from "lodash"
- 
+import screenfull from "screenfull"
+
 var actions = {
 	nextPage ( store ) {
 		let currentPage = store.state.currentPage
@@ -37,7 +38,6 @@ var actions = {
 	load ( store, data ) {
 		let saveData = {}
 
-		console.log(data)
 
 		if ( data ) {
 			saveData = data
@@ -57,6 +57,11 @@ var actions = {
 	loadDefaults ( store ) {
 		store.dispatch( "load", store.state.defaultSettings )
 		store.dispatch( "save" )
+	},
+	checkFullscreen ( store ) {
+		if (!store.state.isHybridApp && store.state.mobileDevice && store.state.browserName != "safari"){
+            screenfull.request()
+        }
 	}
 };
 

@@ -80,7 +80,9 @@ var state = {
 	matterObjectsRestitution: 0.01,
 	matterObjectsFrictionAir: 0.01,
 	backgroundEnabled: true,
-	backgroundShader: "stars"
+	backgroundShader: "stars",
+	pauseMenuShown: false,
+	settingsMenuShown: false
 };
 
 export default state;
