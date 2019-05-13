@@ -653,6 +653,13 @@ export default {
                     Matter.Body.setPosition( modules.cards[a].matterBody, { x: 0, y: 0 } )
                 }
 
+                if (modules.cards[a].matterBody.position.x > modules.size.y * 2) {
+                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
+                    this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)
+
+                    Matter.Body.setPosition( modules.cards[a].matterBody, { x: 0, y: 0 } )
+                }
+
                 if (modules.cards[a].matterBody.position.x < -modules.size.x ) {
                     this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.x)
                     this.totalScore += Math.abs(modules.cards[a].matterBody.velocity.y)

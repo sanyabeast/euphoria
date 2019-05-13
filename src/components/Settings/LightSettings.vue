@@ -25,7 +25,7 @@
 		    <v-card-text class="pt-0">
 		      	<v-slider
 	            	v-model="bumpmappingLevel"
-	            	thumb-label
+	            	thumb-label="always"
 	            	min="1"
 	            	max="100"
 	            	@change="$emit(`bumpmappingLevel`, $event)"
@@ -42,7 +42,7 @@
 		    <v-card-text class="pt-0">
 		      <v-slider
 	          	v-model="lightDistance"
-	          	thumb-label
+	          	thumb-label="always"
 	          	min="1"
 	          	max="2000"
 	          	@change="$emit(`lightDistance`, $event)"
@@ -57,7 +57,7 @@
 		    <v-card-text class="pt-0">
 		      <v-slider
 	          	v-model="lightIntensity"
-	          	thumb-label
+	          	thumb-label="always"
 	          	min="0"
 	          	step="0.1"
 	          	max="3"
