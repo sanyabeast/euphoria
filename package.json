@@ -1,6 +1,6 @@
 {
     "name": "euphoria",
-    "version": "1.0.62",
+    "version": "1.0.63",
     "main": "index.js",
     "author": "sanyabeast <a.gvrnsk@gmail.com>",
     "license": "MIT",
@@ -39,6 +39,7 @@
         "jsonfile": "^5.0.0",
         "lodash": "latest",
         "matter-js": "latest",
+        "node-gyp": "^4.0.0",
         "node-sass": "latest",
         "node-sass-magic-importer": "latest",
         "opn": "latest",
@@ -48,6 +49,7 @@
         "resolve-url-loader": "latest",
         "rimraf": "latest",
         "sass-loader": "latest",
+        "screenfull": "latest",
         "stats.js": "latest",
         "style-loader": "latest",
         "terser": "latest",
@@ -60,15 +62,14 @@
         "vue-loader": "15.4.2",
         "vue-style-loader": "latest",
         "vue-svg-loader": "latest",
+        "vue-swatches": "latest",
         "vue-template-compiler": "latest",
         "vuetify": "^1.5.14",
         "vuex": "latest",
         "webpack": "latest",
         "webpack-bundle-analyzer": "latest",
         "webpack-cli": "latest",
-        "webpack-dev-server": "latest",
-        "vue-swatches": "latest",
-        "screenfull": "latest"
+        "webpack-dev-server": "latest"
     },
     "dependencies": {
         "vue-cli": "^2.9.6"
